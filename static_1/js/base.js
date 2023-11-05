@@ -1,1 +1,1 @@
-const KReact = 
+console.log(document.querySelector("body"))
