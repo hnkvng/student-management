@@ -84,6 +84,9 @@
 }
 .tool_bar
 {  
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     width: 130px;
     height: 692px;
     background-color: var(--tool-bar-color) ;
@@ -98,15 +101,19 @@
 }
 .t-list-item
 {
-    padding: 12px;
+    padding: 16px;
     font-size: 0.8rem;
     font-weight: bold;
     color: var(--white-color);
     cursor: pointer;
 }
-.t-list-item:hover
+.--item-hover-1:hover
 {
     border-bottom: 1px solid var(--white-color);
+}
+.--item-hover-2:hover
+{
+    border-top: 1px solid var(--white-color);
 }
 .info
 {
