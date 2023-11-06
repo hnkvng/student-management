@@ -1,1 +1,0 @@
-const tool_bar_list = []
