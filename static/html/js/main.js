@@ -1,5 +1,4 @@
 
-import { add_row, delete_row } from "./Dom.js";
 import {Doms,bases,outputs,tests} from "./export.js"
 
 //Variable const
@@ -13,21 +12,6 @@ export const name_data = ["ID","Name","C#","Java","C++"];
 
 //start Function
 
-export function train_Full()//duyệt qua hết dữ liệu trên bảng
-{    
-    element = update();
-    list_input = get_Member_Current_Input();
-    train_Row_Data();
-    train_Column_Data();
-    set_Event();
-    focus_Firt();
-    if(Object.keys(DATA).length < 0)
-    {
-        return false;
-    }
-    return true;  
-}
-
 export function update()
 {
     let row_All= bases.$$$(".row");
@@ -38,6 +22,15 @@ export function update()
     let input_3_All = bases.$$$("#input_3");
     return [row_All,input_ID_All,input_Name_All,input_1_All,input_2_All,input_3_All];
 }update();
+
+export function train_Full()//duyệt qua hết dữ liệu trên bảng
+{    
+    element = update();
+    list_input = get_Member_Current_Input();
+    train_Row_Data();
+    train_Column_Data();
+    return(Object.keys(DATA).length > 0)
+}
 
 export function focus_Firt()
 {
@@ -82,16 +75,16 @@ export function test_Undefined()//kiểm tra undefined và null
     return true;
 }
 
-export function test_Data_Empty()//kiểm tra lỗi
+export function test_Data_Empty()//kiểm tra rỗng
 {
-    let empty = false;
+    let empty = true;
     for(let i = 1; i < add_Element_Row().length; i++)
     {
         element[i].forEach((e,index) => {
             empty = element.some((e) => e[index].value == "")
         }) 
     }
-    if(empty == true)
+    if(empty)
     {
         alert("nhập thiếu")
     }
@@ -111,7 +104,6 @@ export function find_number(data)//tìm số trong chuỗi
     return number;
 }
     
-
 export function find_string(data)//tìm chữ trong chuỗi
 {
     let string = "";
@@ -125,82 +117,54 @@ export function find_string(data)//tìm chữ trong chuỗi
     return string;
 }
 
-export function draw_Error_ID(data,target)
+export function draw_Error(data,target,find)
 {
-    if(find_string(data) != "")
+    if(find(data) != "")
     {
         target.setAttribute("style","color:var(--error--color)");
         return false;
     }
-    else
-    {
-        return true
-    }
+    return true; 
 }
 
-export function draw_Error_Name(data,target)
-{
-    if(find_number(data) != "")
-    {
-        target.setAttribute("style","color:var(--error--color)");
-        return false;
-    }
-    else
-    {
-        return true;
-    }
-}
 
-export function draw_Error_Point(data,target)
+export function draw_Error_Point(data,target,find)
 {
     let number = parseInt(data);
-    let string = find_string(data);
-    if(isNaN(number) || number > 10 || number < 0 || string != "")
+    if(isNaN(number) || number > 10 || number < 0 || find(data) != "")
     {
         target.setAttribute("style","color:var(--error--color)");
         return false;
     }
-    else
-    {
-        return true;
-    } 
+    return true;
 }
 
 export function test_Data_Error()//kiểm tra lỗi trong dữ liệu
 {
-    let bool = true;
     if(!test_Data_Empty())
     {
+        let a,b,c;
+        a = true;
+        b = true;
+        c = true;
         for(let i of list_input)
         {
             switch (i.name)
             {                  
                 case "ID":
-                    if(draw_Error_ID(i.value,i) === false)
-                    {
-                        bool = false;
-                    }
+                    a = draw_Error(i.value,i,find_string);
                     break;
                 case "Name":
-                    if(draw_Error_Name(i.value,i)=== false)
-                    {
-                        bool = false;
-                    }         
-                    break;
+                    b = draw_Error(i.value,i,find_number);     
+                    break;  
                 default:
-                    if(draw_Error_Point(i.value,i) === false) 
-                    {
-                        bool = false;
-                    }         
-                    break;          
+                    c = draw_Error_Point(i.value,i,find_string);   
+                    break;             
             }
         }
+        return (a && b && c);
     }
-    else
-    {
-        bool = false;
-    }
-    return bool;
+    return false;
 }
 
 export function add_Element_Row()//lấy toàn bộ thẻ <tr>
@@ -224,7 +188,7 @@ export function get_Member_Current_Input()//lấy toàn bộ thẻ <input>
                 list_new.push(element)            
             }
         });
-    } 
+    }
     if(list_new == 0)
     {
         return null;
@@ -309,9 +273,9 @@ export function same_ID()
     let row = add_Element_Row().length
     for(let i = 1; i < row ; i++)
     {
+        let k = DATA[i]["ID"];
         for(let j = i + 1; j < row; j++)
-        {
-            let k = DATA[i]["ID"];
+        {         
             if( k == DATA[j]["ID"] )
             {
                 alert(`ID đã bị trùng tại hàng ${j} và hàng ${i}`);
@@ -328,7 +292,8 @@ export function Print_click()
 export function Print_()//in ra màn hình toàn bộ data
 {
     Doms.table.childNodes[1].innerHTML = "";
-    Doms.table.childNodes[1].innerHTML = `
+    Doms.table.childNodes[1].innerHTML = 
+    `
         <tr class="row">
             <td class="ID" >ID</td>
             <td class="Name">Name</td>
@@ -336,7 +301,7 @@ export function Print_()//in ra màn hình toàn bộ data
             <td class="Point_2">Java</td>
             <td class="Point_3">C++</td>
         </tr>
-        `;
+    `;
     for(let i in DATA)
     {           
         if(i > 0)  
@@ -354,38 +319,13 @@ export function Print_()//in ra màn hình toàn bộ data
             newElement[i - 1] = newnode;
         }     
     }
-    set_Event();
 }
 
 export function set_Event()//set những sự kiện xảy ra
 {
-    element = update()
-    let member_row = add_Element_Row()
-    if(list_input != null)
-    {
-        list_input.forEach((element) =>
-        {
-            element.addEventListener('keydown',handleKeydown);
-        })
-    }
-    if( member_row != null)
-    {
-        member_row.forEach((e,index) =>
-        {
-            if(index != 0)
-            {
-                for(let i in e.childNodes)
-                {
-                    if(e.childNodes[i].tagName == "TD" && i%2 != 0 && e.childNodes[i].childNodes[1] == undefined)
-                    {
-                        e.addEventListener('click',handleClick);
-                    }
-                }
-            }         
-            
-        })
-    }
-}
+    table.addEventListener("click",handleClick)
+    table.addEventListener("keydown",handleKeydown)
+}set_Event();
 
 export function clear_Style(e_input)
 {
@@ -428,9 +368,9 @@ export function handledefault(event)
 }
 export function handleClick(event)
 {
-    const e_td = event.target.closest('td'); 
-    if(e_td)
-    {
+    const e_td = event.target.closest('td');
+    if(e_td && e_td.childNodes[1] == undefined)
+    { 
         let html_input = {
         "ID":`<input id="input_ID" type="text" name="ID" title = "nhập 0 - 9999" maxlength="4">`,
         "Name":`<input id="input_Name" type="text" name="Name" title = "nhập tên" maxlength="50" >`,
@@ -448,7 +388,7 @@ export function handleClick(event)
                 e_td.innerHTML = html_input[i];
                 e_td.childNodes[0].focus();             
             }
-        }   
+        }     
     }
 }
 //end Function
