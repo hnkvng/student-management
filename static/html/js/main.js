@@ -24,7 +24,7 @@ export function update()
 }update();
 
 export function train_Full()//duyệt qua hết dữ liệu trên bảng
-{    
+{   
     element = update();
     list_input = get_Member_Current_Input();
     train_Row_Data();
@@ -35,7 +35,8 @@ export function train_Full()//duyệt qua hết dữ liệu trên bảng
 
 export function focus_First()
 {
-    if(list_input != 0)
+    console.log(list_input)
+    if(list_input != null)
     {
         list_input[0].focus(); 
     }
@@ -256,7 +257,7 @@ export function delete_1()
         }
         else 
         {      
-            Doms.row_icon.removeChild(delete_row);
+            Doms.row_icon.removeChild(Doms.delete_row);
             Doms.table.childNodes[1].removeChild(newElement[k]);   
             newElement.pop(newElement[k]);
             delete DATA[k + 1];      
@@ -324,8 +325,8 @@ export function Print_()//in ra màn hình toàn bộ data
 
 export function set_Event()//set những sự kiện xảy ra
 {
-    table.addEventListener("click",handleClick)
-    table.addEventListener("keydown",handleKeydown)
+    Doms.table.addEventListener("click",handleClick)
+    Doms.table.addEventListener("keydown",handleKeydown)
 }set_Event();
 
 export function clear_Style(e_input)
