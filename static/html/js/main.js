@@ -29,7 +29,7 @@ export function train_Full()//duyệt qua hết dữ liệu trên bảng
     list_input = get_Member_Current_Input();
     train_Row_Data();
     train_Column_Data();
-    focus_First;
+    focus_First();
     return(Object.keys(DATA).length > 0)
 }
 
