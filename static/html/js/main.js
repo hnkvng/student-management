@@ -202,7 +202,7 @@ export function remove_Button()
     let len = Object.keys(DATA).length;
     if(len == 0)
     {
-        Doms.row_icon.removeChild(delete_row);
+        Doms.row_icon.removeChild(Doms.delete_row);
     }
 
 }remove_Button();
@@ -214,7 +214,7 @@ export function add_Click()
 
 export function add()
 {
-    Doms.row_icon.appendChild(delete_row);
+    Doms.row_icon.appendChild(Doms.delete_row);
     let k = newElement.length;
     newElement[k] = bases.createElement("tr");
     newElement[k].className = "row";
