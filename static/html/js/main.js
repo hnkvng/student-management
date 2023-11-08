@@ -29,10 +29,11 @@ export function train_Full()//duyệt qua hết dữ liệu trên bảng
     list_input = get_Member_Current_Input();
     train_Row_Data();
     train_Column_Data();
+    focus_First;
     return(Object.keys(DATA).length > 0)
 }
 
-export function focus_Firt()
+export function focus_First()
 {
     if(list_input != 0)
     {
