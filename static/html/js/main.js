@@ -370,6 +370,11 @@ export function handledefault(event)
 export function handleClick(event)
 {
     const e_td = event.target.closest('td');
+    const e_input = event.target.closest('input');
+    if(e_input)
+    {
+       clear_Style(e_input);
+    }
     if(e_td && e_td.childNodes[1] == undefined)
     { 
         let html_input = {
