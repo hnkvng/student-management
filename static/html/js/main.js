@@ -1,4 +1,4 @@
-
+"use strict";
 import {Doms,bases,outputs,tests} from "./export.js"
 
 //Variable const
@@ -33,13 +33,19 @@ export function train_Full()//duyệt qua hết dữ liệu trên bảng
     return(Object.keys(DATA).length > 0)
 }
 
+Doms.Print.disabled = true;
 export function focus_First()
 {
-    console.log(list_input)
     if(list_input != null)
     {
-        list_input[0].focus(); 
+        list_input[0].focus();
+        Doms.Print.disabled = false;
     }
+    else
+    {
+        Doms.Print.disabled = true;
+    }
+    
 }
 
 export function train_Row_Data()//duyệt qua hàng
@@ -191,6 +197,7 @@ export function get_Member_Current_Input()//lấy toàn bộ thẻ <input>
             }
         });
     }
+    console.log(list_new)
     if(list_new == 0)
     {
         return null;
