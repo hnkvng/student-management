@@ -1,0 +1,20 @@
+header
+{
+  min-width: 100vw;
+  background-color: cadetblue;
+  color: white;
+  display: flex;
+}
+
+.nav_link
+{    
+  display: block;
+  padding: 23px;
+  font-size: 15px;
+  color: white;
+  text-decoration: none;
+}
+.nav_link:hover
+{
+    color: rgb(3, 50, 52);
+}

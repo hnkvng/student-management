@@ -1,0 +1,42 @@
+.container
+{
+    min-width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 50px 0px;
+    background-color: #eceaea;
+}
+.form
+{
+    display: flex;
+    justify-content: center;
+    width: 848px;
+    height: 100%;
+    flex-wrap: wrap;
+}
+.form_group {
+    padding: 8px;
+    width: 400px;
+}
+.customs_button
+{
+    height: 50px;
+    width: 100px;
+    margin: 0px 20px;
+}
+.costumebutton
+{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.log_info
+{
+    color: red;
+}
+.input_error
+{
+    border: red;
+}
+
