@@ -1,0 +1,39 @@
+.wrapper
+{
+    min-width: 100vw;
+    min-height: 100vh;
+}
+.table_responsive
+{
+    display: flex;
+    min-height: 500px;
+    min-width: 1200px;
+    max-height: 600px;
+    background-color: #f5f5f5;
+    margin: 20px;
+    overflow-y: auto;
+    table-layout: auto;
+}
+.table_responsive thead
+{
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+.grid
+{
+    display: flex;
+    justify-content: center;
+}
+.selection
+{
+    text-align: center;
+    font-size: 20px;
+    min-width: 100px;
+    height: 50px;
+}
+.title
+{
+    display: flex;
+    justify-content: center;
+}

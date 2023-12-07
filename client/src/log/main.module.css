@@ -14,6 +14,8 @@
     animation: slideInLeft ease .8s, fadeOut linear 1s 3s forwards;
     transition: all linear;
 }
+
+
 @keyframes slideInLeft {
     from {
         opacity: 0;

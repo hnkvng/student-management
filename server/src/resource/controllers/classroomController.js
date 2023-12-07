@@ -6,8 +6,8 @@ class classControllers {
     //GET /class
     show(rep, res, next) {
         Classroom.find()
-            .then((Class) => {
-                res.json({ Class });
+            .then((classes) => {
+                res.json({ classes });
             })
             .catch(next);
     }

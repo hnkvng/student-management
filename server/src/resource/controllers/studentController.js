@@ -1,34 +1,18 @@
 const Student = require('../models/student');
+const Classroom = require('../models/classroom');
 
 // Điều khiển
 
 class studentControllers {
     //GET /student
     show(rep, res, next) {
-        Student.find()
-            .then((student) => {
-                student = student.map((element, index) => {
-                    return {
-                        _id: element.id,
-                        STT: index + 1,
-                        MSSV: element.MSSV,
-                        Name: element.Name,
-                        Birth: `${element.Birth.getDate()}/${
-                            element.Birth.getMonth() + 1
-                        }/${element.Birth.getFullYear()}`,
-                        Faculty: element.Faculty,
-                        QT: element.QT,
-                        GK: element.GK,
-                        CK: element.CK,
-                        TB: element.TB,
-                        Class: element.Class,
-                        createdAt: element.createdAt,
-                        updatedAt: element.updatedAt,
-                    };
-                });
-                res.json({ student });
-            })
-            .catch(next);
+        const id = rep.body;
+        console.log(id);
+        // Promise.all([Classroom.findOne({_id: id}), Student.find()])
+        //     .then(([classes, student]) => {
+        //         // const x = classes.Students.filter((_id) => student.includes(_id))
+        //         // console.log(x);
+        //     })
     }
 }
 

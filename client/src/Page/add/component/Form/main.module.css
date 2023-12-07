@@ -7,13 +7,6 @@
     padding: 50px 0px;
     background-color: #eceaea;
 }
-#toast
-{
-    position:fixed;
-    top: 32px;
-    right: 32px;
-}
-
 .form
 {
     display: flex;
@@ -21,6 +14,12 @@
     width: 848px;
     height: 100%;
     flex-wrap: wrap;
+}
+#toast
+{
+    position:fixed;
+    top: 32px;
+    right: 32px;
 }
 .form_group {
     padding: 8px;

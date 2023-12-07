@@ -9,6 +9,30 @@ const checkChar = (data) => /[a-zA-Z]/.test(data);
 const checkForNum = (data) => /[^.\w]/.test(data);
 const checkForClass = (data) => /[^-_\w]/.test(data);
 
+const fieldStudent = [
+    'MSSV',
+    'Name',
+    'Birth',
+    'Faculty',
+    'QT',
+    'GK',
+    'CK',
+    'Class',
+];
+const createOject = (value) =>
+    Object.fromEntries(fieldStudent.map((name) => [name, value]));
+const initState = {
+    student: createOject(''),
+    status: createOject(false),
+    info: createOject(''),
+    style: createOject(null),
+    button: {
+        submit: true,
+        clear: true,
+    },
+    log: '',
+};
+
 const testCase = (state, name, data) => {
     switch (name) {
         case 'MSSV':
@@ -17,10 +41,9 @@ const testCase = (state, name, data) => {
             state.status[name] = !checkNum(data);
             break;
         case 'Birth':
-            state.status[name] = !(
-                new Date(data).getFullYear() > new Date().getFullYear() ||
-                new Date(data).getFullYear() < 1000
-            );
+            state.status[name] =
+                !(new Date(data).getFullYear() > new Date().getFullYear()) &&
+                !(new Date(data).getFullYear() < 1000);
             break;
         case 'Faculty':
             state.status[name] = !checkNum(data);
@@ -54,84 +77,33 @@ const checkData = (state, action) => {
 };
 
 const addInfoError = (state) => {
-    for (let item in state.status) {
-        if (!state.status[item]) {
-            state.info[item] = (
-                <small style={{ color: 'red' }}>
-                    thông tin sai hoặc thiếu!
-                </small>
-            );
+    Object.entries(state.status).forEach(([item, value]) => {
+        if (!value) {
+            state.info[item] = 'thông tin sai hoặc thiếu';
             state.style[item] = { border: '1px solid red' };
         } else {
             state.style[item] = { border: '1px solid green' };
         }
-    }
+    });
 };
 
 const deleteInfoError = (state, action) => {
-    for (let item in state.status) {
+    Object.entries(state.status).forEach(([item]) => {
         if (item === action.payload.name) {
             state.info[item] = null;
             state.style[item] = null;
         }
-    }
+    });
 };
 
-const dataCheckEmpty = (datas) => {
-    const value = Object.values(datas);
-    return value.some((va) => va !== '');
-};
+const dataCheckEmpty = (datas) =>
+    Object.values(datas).some((value) => value !== '');
 
 const FormSlice = createSlice({
     name: 'FormSlice',
-    initialState: {
-        student: {
-            MSSV: '',
-            Name: '',
-            Birth: '',
-            Faculty: '',
-            QT: '',
-            GK: '',
-            CK: '',
-            Class: '',
-        },
-        status: {
-            MSSV: false,
-            Name: false,
-            Birth: false,
-            Faculty: false,
-            QT: false,
-            GK: false,
-            CK: false,
-            Class: false,
-        },
-        info: {
-            MSSV: null,
-            Name: null,
-            Birth: null,
-            Faculty: null,
-            QT: null,
-            GK: null,
-            CK: null,
-            Class: null,
-        },
-        style: {
-            MSSV: null,
-            Name: null,
-            Birth: null,
-            Faculty: null,
-            QT: null,
-            GK: null,
-            CK: null,
-            Class: null,
-        },
-        button: {
-            submit: true,
-            clear: true,
-        },
-        log: [],
-    },
+    initialState: initState,
     reducers: {
+        resetinitialState: () => initState,
         enterStudent: (state, action) => {
             state.student = action.payload;
             if (dataCheckEmpty(state.student)) {
@@ -144,11 +116,12 @@ const FormSlice = createSlice({
         },
         clearStudent: (state, action) => {
             state.student = action.payload.form;
-            state.log.push({ id: action.payload.id, info: props.clear });
-            state.button.clear = true;
+            state.log = { ...props.clear, idTimeout: action.payload.id };
         },
-        popLog: (state) => {
-            state.log.pop(state.log[0]);
+        setInfo: (state) => {
+            if (state.log.idTimeout !== undefined)
+                clearTimeout(state.log.idTimeout);
+            state.log = '';
         },
         deleteInfoError: deleteInfoError,
         addInfoError: addInfoError,
@@ -161,8 +134,7 @@ const FormSlice = createSlice({
         });
         builder.addCase(addStudent.fulfilled, (state, action) => {
             state.loading = false;
-            state.button.submit = true;
-            state.log.push({ id: 1, info: props.clear });
+            state.log = props.success;
         });
         builder.addCase(addStudent.rejected, (state, action) => {
             state.loading = false;

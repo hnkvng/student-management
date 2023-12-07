@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button';
 import { addStudent } from './FormSlice';
 import clsx from 'clsx';
 
-function FormInput({ info, style, status, button }) {
+function FormInput({ info, log, style, status, id, button, setIdTimeOut }) {
     const form = {
         MSSV: '',
         Name: '',
@@ -22,12 +22,21 @@ function FormInput({ info, style, status, button }) {
     const target = useRef();
     const classFormGroup = clsx('mb-3', [styles.form_group]);
     const dipatch = useDispatch();
+    const reset = FormSlice.actions.resetinitialState;
     const check = FormSlice.actions.checkData;
     const enter = FormSlice.actions.enterStudent;
     const clear = FormSlice.actions.clearStudent;
-    const popL = FormSlice.actions.popLog;
+    const set = FormSlice.actions.setInfo;
     const addinfoError = FormSlice.actions.addInfoError;
     const deleteInfoError = FormSlice.actions.deleteInfoError;
+    const setTime = () => {
+        if (log === '') {
+            const id = setTimeout(() => {
+                dipatch(set());
+            }, 4000);
+            setIdTimeOut(id);
+        }
+    };
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormStudent({ ...formStudent, [name]: value });
@@ -35,6 +44,7 @@ function FormInput({ info, style, status, button }) {
         dipatch(deleteInfoError({ name: name }));
     };
     const handleSubmit = (e) => {
+        setTime();
         e.preventDefault();
         dipatch(addinfoError());
         if (Object.values(status).includes(false)) return;
@@ -50,7 +60,7 @@ function FormInput({ info, style, status, button }) {
         }
     };
     const handleClear = () => {
-        const id = setTimeout(() => dipatch(popL()), 3600);
+        setTime();
         dipatch(clear({ form, id }));
         setFormStudent(form);
         target.current.focus();
@@ -58,7 +68,10 @@ function FormInput({ info, style, status, button }) {
     useEffect(() => {
         dipatch(enter(formStudent));
     }, [formStudent, dipatch, enter]);
-
+    useEffect(() => {
+        target.current.focus();
+        dipatch(reset());
+    }, [dipatch, reset]);
     return (
         <Form action="/student" className={styles.form}>
             <Form.Group className={classFormGroup}>
@@ -72,7 +85,7 @@ function FormInput({ info, style, status, button }) {
                     ref={target}
                     style={style.MSSV}
                 />
-                {info.MSSV}
+                <small style={{ color: 'red' }}>{info.MSSV}</small>
             </Form.Group>
             <Form.Group className={classFormGroup}>
                 <Form.Label>Họ và tên sinh viên</Form.Label>
@@ -84,7 +97,7 @@ function FormInput({ info, style, status, button }) {
                     maxLength={255}
                     style={style.Name}
                 />
-                {info.Name}
+                <small style={{ color: 'red' }}>{info.Name}</small>
             </Form.Group>
             <Form.Group className={classFormGroup}>
                 <Form.Label>Ngày sinh</Form.Label>
@@ -95,7 +108,7 @@ function FormInput({ info, style, status, button }) {
                     onChange={handleInputChange}
                     style={style.Birth}
                 />
-                {info.Birth}
+                <small style={{ color: 'red' }}>{info.Birth}</small>
             </Form.Group>
             <Form.Group className={classFormGroup}>
                 <Form.Label>Khoa</Form.Label>
@@ -107,7 +120,7 @@ function FormInput({ info, style, status, button }) {
                     maxLength={255}
                     style={style.Faculty}
                 />
-                {info.Faculty}
+                <small style={{ color: 'red' }}>{info.Faculty}</small>
             </Form.Group>
             <Form.Group className={classFormGroup}>
                 <Form.Label>Điểm quá trình</Form.Label>
@@ -120,7 +133,7 @@ function FormInput({ info, style, status, button }) {
                     onKeyDown={handleKeydown}
                     style={style.QT}
                 />
-                {info.QT}
+                <small style={{ color: 'red' }}>{info.QT}</small>
             </Form.Group>
             <Form.Group className={classFormGroup}>
                 <Form.Label>Điểm giữa kì</Form.Label>
@@ -133,7 +146,7 @@ function FormInput({ info, style, status, button }) {
                     onKeyDown={handleKeydown}
                     style={style.GK}
                 />
-                {info.GK}
+                <small style={{ color: 'red' }}>{info.GK}</small>
             </Form.Group>
             <Form.Group className={classFormGroup}>
                 <Form.Label>Điểm cuối kì</Form.Label>
@@ -146,7 +159,7 @@ function FormInput({ info, style, status, button }) {
                     onKeyDown={handleKeydown}
                     style={style.CK}
                 />
-                {info.CK}
+                <small style={{ color: 'red' }}>{info.CK}</small>
             </Form.Group>
             <Form.Group className={classFormGroup}>
                 <Form.Label>Mã lớp</Form.Label>
@@ -158,7 +171,7 @@ function FormInput({ info, style, status, button }) {
                     maxLength={255}
                     style={style.Class}
                 />
-                {info.Class}
+                <small style={{ color: 'red' }}>{info.Class}</small>
             </Form.Group>
             <div className={styles.costumebutton}>
                 <Button

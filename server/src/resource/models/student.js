@@ -14,7 +14,7 @@ const student = new Schema(
             required: true,
         },
         Birth: {
-            type: Date,
+            type: String,
             required: true,
         },
         Faculty: {

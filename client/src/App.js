@@ -5,6 +5,7 @@ import Header from './Layout/header';
 import Footer from './Layout/footer';
 import Home from './Page/home/home';
 import FormAdd from './Page/add/FormAdd';
+import Student from './Page/student/student';
 
 function App() {
     return (
@@ -13,6 +14,7 @@ function App() {
             <div className="content">
                 <Routes>
                     <Route path="/" element={<Home />} />
+                    <Route path="/student" element={<Student />}></Route>
                     <Route path="/student/add" element={<FormAdd />}></Route>
                 </Routes>
             </div>

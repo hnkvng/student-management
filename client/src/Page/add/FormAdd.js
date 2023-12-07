@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import FormInput from './component/Form';
 import styles from './component/Form/main.module.css';
 import { useSelector } from 'react-redux';
@@ -10,7 +10,9 @@ import {
     statusButton,
 } from '../../redux/selectors';
 import Log from '../../log/log';
+
 function FormAdd() {
+    const [idTimeOut, setIdTimeOut] = useState(null);
     const info = useSelector(infoInputStudent);
     const style = useSelector(styleInputStudent);
     const status = useSelector(statusInputStudent);
@@ -18,18 +20,20 @@ function FormAdd() {
     const log = useSelector(infoLog);
     return (
         <>
-            <div id={styles.toast}>
-                {log.map((element, index) => (
-                    <Log key={index} {...element.info}></Log>
-                ))}
-            </div>
+            {log !== '' ? (
+                <div id={styles.toast}>
+                    <Log {...log}></Log>
+                </div>
+            ) : null}
             <div className={styles.container}>
                 <FormInput
                     info={info}
+                    log={log}
                     style={style}
                     status={status}
-                    log={log}
                     button={statusBut}
+                    id={idTimeOut}
+                    setIdTimeOut={setIdTimeOut}
                 />
             </div>
         </>
