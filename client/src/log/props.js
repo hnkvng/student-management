@@ -3,19 +3,16 @@ import styles from './main.module.css';
 const props = {
     success: {
         info: 'Success',
-        des: 'Thêm sinh viên thành công',
         icon: 'fa-solid fa-circle-check',
         theme: styles.toast_success,
     },
     edit: {
         info: 'Edit',
-        des: 'Chỉnh sửa sinh viên thành công',
         icon: 'fa-regular fa-pen-to-square',
         theme: styles.toast_edit,
     },
     error: {
         info: 'Error',
-        des: 'Thêm sinh viên không thành công',
         icon: 'fa-solid fa-circle-xmark',
         theme: styles.toast_error,
     },

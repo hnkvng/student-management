@@ -15,6 +15,14 @@ export {
 //PageStudent
 const getInfoStudent = (state) => state.table.student;
 const getInfoClasses = (state) => state.table.classes;
-const getCurrentIdClasses = (state) => state.table.classcurrent;
+const getCurrentIdClasses = (state) => state.table.class.classesId;
+const getCurrentNameClasses = (state) => state.table.class.classesName;
+const getIconCurrent = (state) => state.table.iconCurrent;
 
-export { getInfoStudent, getInfoClasses, getCurrentIdClasses };
+export {
+    getInfoStudent,
+    getInfoClasses,
+    getCurrentIdClasses,
+    getCurrentNameClasses,
+    getIconCurrent,
+};

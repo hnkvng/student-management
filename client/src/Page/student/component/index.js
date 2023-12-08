@@ -1,22 +1,62 @@
 import React from 'react';
-import { MDBTable, MDBTableHead, MDBTableBody } from 'mdb-react-ui-kit';
 import styles from './main.module.css';
 import Body from './body';
 import Class from './classes';
+import { useSelector } from 'react-redux';
+import {
+    getCurrentNameClasses,
+    getIconCurrent,
+} from '../../../redux/selectors';
+import Option from './options';
+import CheckBox from './checkbox';
+import Button from 'react-bootstrap/Button';
 function Table() {
+    const ClassName = useSelector(getCurrentNameClasses);
+    const icon = useSelector(getIconCurrent);
     return (
         <div className={styles.wrapper}>
             <div className={styles.grid}>
                 <div className={styles.title}>
                     <Class></Class>
                 </div>
+                <h3>
+                    {ClassName}
+                    {icon.class !== undefined ? (
+                        <i
+                            className={icon.class}
+                            id={styles.icon}
+                            style={icon.style}
+                        ></i>
+                    ) : null}
+                </h3>
             </div>
-
+            <div className={styles.selection}>
+                {ClassName !== null ? <Option></Option> : null}
+                {icon.class === 'fa-solid fa-trash' ? (
+                    <Button
+                        variant="primary"
+                        className={styles.customs_button}
+                        type="button"
+                        // disabled={button.submit}
+                        // onClick={handleSubmit}
+                    >
+                        Thực hiện
+                    </Button>
+                ) : null}
+            </div>
             <div className={styles.table_responsive}>
-                <MDBTable>
-                    <MDBTableHead>
+                <table className="table table-hover table-condensed table-condensed">
+                    <thead>
                         <tr>
-                            <th scope="col">STT</th>
+                            <th scope="col">
+                                {icon.class === 'fa-solid fa-trash' ? (
+                                    <CheckBox all={'all'}></CheckBox>
+                                ) : null}
+                                {icon.class !== undefined ? (
+                                    <i id={styles.icon}></i>
+                                ) : null}
+                                STT
+                            </th>
                             <th scope="col">MSSV</th>
                             <th scope="col">Họ và tên</th>
                             <th scope="col">Ngày sinh</th>
@@ -26,11 +66,11 @@ function Table() {
                             <th scope="col">CK</th>
                             <th scope="col">TB</th>
                         </tr>
-                    </MDBTableHead>
-                    <MDBTableBody>
+                    </thead>
+                    <tbody>
                         <Body />
-                    </MDBTableBody>
-                </MDBTable>
+                    </tbody>
+                </table>
             </div>
             <ul>
                 <span>

@@ -26,22 +26,33 @@ const updateClassroom = async (modelName, student) => {
     }
 };
 class AddController {
-    add(req, res, next) {
+    async add(req, res, next) {
         try {
             const formdata = calculateTB(req.body);
-            if (!formdata) throw new Error('Error calc point TB');
+            const studentId = req.body.MSSV;
+            const existingStudent = await Student.findOne({ MSSV: studentId });
+            if (existingStudent) {
+                return res
+                    .status(400)
+                    .json({ message: 'ID sinh viên đã tồn tại.' });
+            }
+            if (!formdata) {
+                return res.status(500).json({ message: 'Đã có lỗi xảy ra.' });
+            }
             const uploadStudent = new Student(formdata);
             uploadStudent.save();
             updateClassroom(req.body.Class, uploadStudent)
                 .then(() => {
-                    res.send('thêm sinh viên thành công!');
+                    res.status(201).json({
+                        message: 'Thêm sinh viên thành công.',
+                    });
                 })
                 .catch((error) => {
-                    res.send('có lỗi xảy ra, thêm không thành công!');
+                    res.status(500).json({ message: 'Đã có lỗi xảy ra.' });
                     next(error);
                 });
         } catch (error) {
-            res.send('add not successfully');
+            res.status(500).json({ message: 'Đã có lỗi xảy ra.' });
             next(error);
         }
     }

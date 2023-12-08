@@ -1,25 +1,32 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getApiClasses } from './TableSlice';
-import { getInfoClasses } from '../../../redux/selectors';
-import TableClice from './TableSlice';
+import { getInfoClasses, getCurrentIdClasses } from '../../../redux/selectors';
+import TableSlice from './TableSlice';
 import styles from './main.module.css';
 import Form from 'react-bootstrap/Form';
 function Class() {
-    const dipatch = useDispatch();
-    const get = TableClice.actions.getNameClasses;
+    const dispatch = useDispatch();
+    const get = TableSlice.actions.getNameClasses;
+    const reset = TableSlice.actions.resetIcon;
     const dataClasses = useSelector(getInfoClasses);
-    const handleSelection = (e) => {
-        dipatch(get(e.target.value));
+    const ClassId = useSelector(getCurrentIdClasses);
+    const [selection, setSelection] = useState(ClassId);
+    const handleSelect = (e) => {
+        if (e.target.value === '') dispatch(reset());
+        dispatch(get(e.target.value));
+        setSelection(e.target.value);
     };
     useEffect(() => {
-        dipatch(getApiClasses());
-    }, [dipatch]);
+        dispatch(getApiClasses());
+    }, [dispatch]);
     return (
-        <Form.Select className={styles.selection} onClick={handleSelection}>
-            <option value="Tổng hợp">
-                Tổng hợp | số lớp : {dataClasses.length}
-            </option>
+        <Form.Select
+            className={styles.selection}
+            value={selection}
+            onChange={handleSelect}
+        >
+            <option value="">Chọn lớp</option>
             {dataClasses.map((element, index) => (
                 <option key={index} value={element._id}>
                     Lớp/{element.Name}

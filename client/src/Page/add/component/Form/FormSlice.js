@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { createStudent } from '../../../../API/api';
 import props from '../../../../log/props';
+import { fetchApiData } from '../../../../Helpers/apiHelpers';
 
 const checkEmpty = (data) => /^$/.test(data);
 const checkAll = (data) => /[!@#^$%^&*()_+={}[\]:;<>,.?~"'`\\/-]/.test(data);
@@ -128,17 +129,17 @@ const FormSlice = createSlice({
         checkData: checkData,
     },
     extraReducers: (builder) => {
-        builder.addCase(addStudent.pending, (state, action) => {
+        builder.addCase(addStudent.pending, (state) => {
             state.loading = true;
             state.button.submit = false;
         });
         builder.addCase(addStudent.fulfilled, (state, action) => {
             state.loading = false;
-            state.log = props.success;
+            state.log = { ...props.success, des: action.payload.message };
         });
         builder.addCase(addStudent.rejected, (state, action) => {
             state.loading = false;
-            console.log('Error');
+            state.log = { ...props.error, des: action.payload.message };
         });
     },
 });
@@ -147,12 +148,6 @@ export default FormSlice;
 
 export const addStudent = createAsyncThunk(
     'FormSlice/addStudent',
-    async (payload) => {
-        try {
-            const response = await createStudent(payload);
-            return response.data;
-        } catch (error) {
-            return error;
-        }
-    },
+    async (payload, { rejectWithValue }) =>
+        fetchApiData(createStudent, payload, { rejectWithValue }),
 );

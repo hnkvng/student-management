@@ -5,7 +5,6 @@
 }
 .table_responsive
 {
-    display: flex;
     min-height: 500px;
     min-width: 1200px;
     max-height: 600px;
@@ -22,18 +21,58 @@
 }
 .grid
 {
+    margin: 10px 0 0 10px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+}
+.grid h3
+{
+    text-align: center;
+    flex-basis: 100%;
 }
 .selection
 {
+    display: flex;
     text-align: center;
     font-size: 20px;
-    min-width: 100px;
+    min-width: 200px;
+    max-width: 300px;
     height: 50px;
 }
 .title
 {
     display: flex;
     justify-content: center;
+}
+.th_selection
+{
+    width: 200px;
+    text-align: center;
+}
+.select_option
+{
+    margin: 10px 0 0 10px;
+    min-width: 100px;
+    max-width: 150px;
+    height: 40px;
+}
+#icon {
+    cursor: pointer;
+    padding: 0 16px 0 8px;
+}
+#icon:hover {
+    opacity: 0.5;
+}
+.checkbox
+{
+    cursor: pointer;
+}
+.checkbox_all
+{
+    padding: 0 8px;
+}
+.customs_button
+{
+    margin: 9px;
+    height:  41px;
 }
