@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './main.module.css';
 import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
 import TableClice from './TableSlice';
-import { getIconCurrent } from '../../../redux/selectors';
-function Option() {
+import { getOptionCurrent } from '../../../redux/selectors';
+function Option({ ClassName }) {
     const dispatch = useDispatch();
     const setIcon = TableClice.actions.appearIcon;
-    const iconCurrent = useSelector(getIconCurrent);
-    const [select, setSelect] = useState(iconCurrent);
+    const setOption = TableClice.actions.setOptionCurrent;
+    const optionCurrent = useSelector(getOptionCurrent);
+    const [select, setSelect] = useState(optionCurrent);
     const handleSelect = (e) => {
         setSelect(e.target.value);
+        dispatch(setOption(e.target.value));
         const listIcon = {
             delete: {
                 class: 'fa-solid fa-trash',
@@ -28,6 +30,9 @@ function Option() {
         )[1];
         dispatch(setIcon(icon));
     };
+    useEffect(() => {
+        console.log(optionCurrent);
+    });
     return (
         <Form.Select
             className={styles.select_option}

@@ -4,10 +4,23 @@ import { useDispatch } from 'react-redux';
 import FormSlice from './FormSlice';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { addStudent } from './FormSlice';
 import clsx from 'clsx';
+import { useNavigate } from 'react-router-dom';
 
-function FormInput({ info, log, style, status, id, button, setIdTimeOut }) {
+function FormInput({
+    add,
+    edit,
+    student,
+    info,
+    log,
+    style,
+    status,
+    id,
+    nameButton,
+    button,
+    method,
+    setIdTimeOut,
+}) {
     const form = {
         MSSV: '',
         Name: '',
@@ -20,6 +33,7 @@ function FormInput({ info, log, style, status, id, button, setIdTimeOut }) {
     };
     const [formStudent, setFormStudent] = useState(form);
     const target = useRef();
+    const nav = useNavigate();
     const classFormGroup = clsx('mb-3', [styles.form_group]);
     const dipatch = useDispatch();
     const reset = FormSlice.actions.resetinitialState;
@@ -48,9 +62,7 @@ function FormInput({ info, log, style, status, id, button, setIdTimeOut }) {
         e.preventDefault();
         dipatch(addinfoError());
         if (Object.values(status).includes(false)) return;
-        dipatch(addStudent(formStudent));
-        setFormStudent(form);
-        target.current.focus();
+        dipatch(method(formStudent));
     };
     const handleKeydown = (e) => {
         if (e.keyCode === 190) {
@@ -62,16 +74,26 @@ function FormInput({ info, log, style, status, id, button, setIdTimeOut }) {
     const handleClear = () => {
         setTime();
         dipatch(clear({ form, id }));
-        setFormStudent(form);
+        setFormStudent(student);
         target.current.focus();
     };
     useEffect(() => {
         dipatch(enter(formStudent));
     }, [formStudent, dipatch, enter]);
     useEffect(() => {
-        target.current.focus();
         dipatch(reset());
+        target.current.focus();
     }, [dipatch, reset]);
+    useEffect(() => {
+        setFormStudent(student);
+    }, [student]);
+    useEffect(() => {
+        if (edit || add) {
+            setFormStudent(form);
+            target.current.focus();
+        }
+        if (edit) setTimeout(() => nav('/student'), 1500);
+    }, [add, edit]);
     return (
         <Form action="/student" className={styles.form}>
             <Form.Group className={classFormGroup}>
@@ -181,7 +203,7 @@ function FormInput({ info, log, style, status, id, button, setIdTimeOut }) {
                     disabled={button.submit}
                     onClick={handleSubmit}
                 >
-                    Thêm
+                    {nameButton}
                 </Button>
                 <Button
                     variant="primary"

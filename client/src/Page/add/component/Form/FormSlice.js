@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { createStudent } from '../../../../API/api';
+import { createStudent, setStudentEdit } from '../../../../API/api';
 import props from '../../../../log/props';
 import { fetchApiData } from '../../../../Helpers/apiHelpers';
 
@@ -27,11 +27,14 @@ const initState = {
     status: createOject(false),
     info: createOject(''),
     style: createOject(null),
+    nameButton: 'Thêm',
     button: {
         submit: true,
         clear: true,
     },
     log: '',
+    add: false,
+    edit: false,
 };
 
 const testCase = (state, name, data) => {
@@ -80,7 +83,7 @@ const checkData = (state, action) => {
 const addInfoError = (state) => {
     Object.entries(state.status).forEach(([item, value]) => {
         if (!value) {
-            state.info[item] = 'thông tin sai hoặc thiếu';
+            state.info[item] = 'thông tin không hợp lệ hoặc thiếu';
             state.style[item] = { border: '1px solid red' };
         } else {
             state.style[item] = { border: '1px solid green' };
@@ -116,7 +119,9 @@ const FormSlice = createSlice({
             }
         },
         clearStudent: (state, action) => {
-            state.student = action.payload.form;
+            state.student = { ...state.student, ...action.payload.form };
+            console.log({ ...state.student, ...action.payload.form });
+            state.status = createOject(false);
             state.log = { ...props.clear, idTimeout: action.payload.id };
         },
         setInfo: (state) => {
@@ -124,23 +129,52 @@ const FormSlice = createSlice({
                 clearTimeout(state.log.idTimeout);
             state.log = '';
         },
+        setNameButton: (state, action) => {
+            state.nameButton = action.payload;
+        },
+        setSatus: (state) => {
+            state.status = createOject(true);
+        },
         deleteInfoError: deleteInfoError,
         addInfoError: addInfoError,
         checkData: checkData,
     },
     extraReducers: (builder) => {
-        builder.addCase(addStudent.pending, (state) => {
-            state.loading = true;
-            state.button.submit = false;
-        });
-        builder.addCase(addStudent.fulfilled, (state, action) => {
-            state.loading = false;
-            state.log = { ...props.success, des: action.payload.message };
-        });
-        builder.addCase(addStudent.rejected, (state, action) => {
-            state.loading = false;
-            state.log = { ...props.error, des: action.payload.message };
-        });
+        builder
+            .addCase(addStudent.pending, (state) => {
+                state.loading = true;
+                state.add = true;
+                state.button.submit = false;
+            })
+            .addCase(addStudent.fulfilled, (state, action) => {
+                state.loading = false;
+                state.status = createOject(false);
+                state.add = false;
+                state.log = { ...props.success, des: action.payload.message };
+            })
+            .addCase(addStudent.rejected, (state, action) => {
+                state.loading = false;
+                state.status = createOject(false);
+                state.add = false;
+                state.log = { ...props.error, des: action.payload.message };
+            })
+            .addCase(editStudent.pending, (state) => {
+                state.loading = true;
+                state.button.submit = false;
+                state.edit = true;
+            })
+            .addCase(editStudent.fulfilled, (state, action) => {
+                state.loading = false;
+                state.status = createOject(false);
+                state.edit = false;
+                state.log = { ...props.edit, des: action.payload.message };
+            })
+            .addCase(editStudent.rejected, (state, action) => {
+                state.loading = false;
+                state.status = createOject(false);
+                state.edit = false;
+                state.log = { ...props.error, des: action.payload.message };
+            });
     },
 });
 
@@ -148,6 +182,9 @@ export default FormSlice;
 
 export const addStudent = createAsyncThunk(
     'FormSlice/addStudent',
-    async (payload, { rejectWithValue }) =>
-        fetchApiData(createStudent, payload, { rejectWithValue }),
+    async (data, Thunk) => fetchApiData(createStudent, data, Thunk),
+);
+export const editStudent = createAsyncThunk(
+    'FormSlice/getApiEdit',
+    async (data, Thunk) => fetchApiData(setStudentEdit, data, Thunk),
 );

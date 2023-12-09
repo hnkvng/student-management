@@ -1,5 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getStudent, getClass, getStudentEdit } from '../../../API/api';
+import {
+    getStudent,
+    getClass,
+    setStudentEdit,
+    getStudentEdit,
+} from '../../../API/api';
 import { fetchApiData } from '../../../Helpers/apiHelpers';
 
 const initState = {
@@ -10,6 +15,8 @@ const initState = {
         classesName: '',
     },
     iconCurrent: {},
+    optionsCurrent: '',
+    studentEdit: {},
 };
 const TableSlice = createSlice({
     name: 'TableSlice',
@@ -21,6 +28,10 @@ const TableSlice = createSlice({
                 classesId: '',
                 classesName: '',
             };
+            state.optionsCurrent = '';
+        },
+        setOptionCurrent: (state, action) => {
+            state.optionsCurrent = action.payload;
         },
         getNameClasses: (state, action) => {
             state.class.classesId = action.payload;
@@ -53,6 +64,17 @@ const TableSlice = createSlice({
             .addCase(getApiClasses.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            })
+            .addCase(getApiStudentEdit.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(getApiStudentEdit.fulfilled, (state, action) => {
+                state.loading = false;
+                state.studentEdit = action.payload.student;
+            })
+            .addCase(getApiStudentEdit.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
             });
     },
 });
@@ -66,7 +88,7 @@ export const getApiClasses = createAsyncThunk(
     'TableSlice/getApiClasses',
     async (_, Thunk) => fetchApiData(getClass, Thunk),
 );
-export const getApiEdit = createAsyncThunk(
-    'TableSlice/getApiEdit',
+export const getApiStudentEdit = createAsyncThunk(
+    'TableSlice/getApiStudentEdit',
     async (data, Thunk) => fetchApiData(getStudentEdit, data, Thunk),
 );

@@ -20,7 +20,7 @@ function Table() {
                     <Class></Class>
                 </div>
                 <h3>
-                    {ClassName}
+                    {ClassName} /
                     {icon.class !== undefined ? (
                         <i
                             className={icon.class}
@@ -31,18 +31,18 @@ function Table() {
                 </h3>
             </div>
             <div className={styles.selection}>
-                {ClassName !== null ? <Option></Option> : null}
-                {icon.class === 'fa-solid fa-trash' ? (
-                    <Button
-                        variant="primary"
-                        className={styles.customs_button}
-                        type="button"
-                        // disabled={button.submit}
-                        // onClick={handleSubmit}
-                    >
-                        Thực hiện
-                    </Button>
+                {ClassName !== null ? (
+                    <Option ClassName={ClassName}></Option>
                 ) : null}
+                {/* <Button
+                    variant="primary"
+                    className={styles.customs_button}
+                    type="button"
+                    // disabled={button.submit}
+                    // onClick={handleSubmit}
+                >
+                    Thực hiện
+                </Button>   */}
             </div>
             <div className={styles.table_responsive}>
                 <table className="table table-hover table-condensed table-condensed">
