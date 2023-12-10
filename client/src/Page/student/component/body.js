@@ -1,38 +1,64 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getApiStudent } from './TableSlice';
+import TableSlice, { getApiStudent } from './TableSlice';
 import {
     getInfoStudent,
     getCurrentIdClasses,
     getIconCurrent,
+    getDelete,
+    getLog,
+    getLogTable,
 } from '../../../redux/selectors';
-import styles from './main.module.css';
 import CheckBox from './checkbox';
-import { Link } from 'react-router-dom';
+import ShowIcon from './showIcon';
+import LogSlice from '../../../log/LogSlice';
 
 function Body() {
+    const setTime = () => {
+        if (log === '') {
+            const id = setTimeout(() => {
+                dispatch(set());
+                dispatch(setLogNull());
+                dispatch(setTableLogNull());
+            }, 4000);
+            setIdTimeOut(id);
+        }
+    };
     const dispatch = useDispatch();
+    const [idTimeOut, setIdTimeOut] = useState(null);
+    const set = LogSlice.actions.setInfo;
+    const setLog = LogSlice.actions.setLog;
+    const setLogNull = LogSlice.actions.setLogNull;
+    const setIdTime = LogSlice.actions.setIdTime;
+    const setTableLogNull = TableSlice.actions.setLogNull;
+    const log = useSelector(getLog);
+    const logTable = useSelector(getLogTable);
     const dataStudent = useSelector(getInfoStudent);
     const id = useSelector(getCurrentIdClasses);
     const icon = useSelector(getIconCurrent);
+    const actionDelete = useSelector(getDelete);
     useEffect(() => {
         dispatch(getApiStudent(id));
     }, [dispatch, id]);
+    useEffect(() => {
+        if (actionDelete) {
+            setTime();
+            dispatch(getApiStudent(id));
+            dispatch(setLog(logTable));
+            dispatch(setIdTime(idTimeOut));
+        }
+    }, [actionDelete]);
     return dataStudent.map((data, index) => (
         <tr key={index}>
             <td>
                 {icon.class === 'fa-solid fa-trash' ? (
                     <CheckBox></CheckBox>
                 ) : null}
-                {icon.class !== undefined ? (
-                    <Link to={`/student/${data._id}/edit`}>
-                        <i
-                            className={icon.class}
-                            id={styles.icon}
-                            style={icon.style}
-                        ></i>
-                    </Link>
-                ) : null}
+                <ShowIcon
+                    icon={icon}
+                    target="Sinh viên"
+                    id={data._id}
+                ></ShowIcon>
                 {index + 1}
             </td>
             <td>{data.MSSV}</td>

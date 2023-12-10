@@ -30,11 +30,14 @@ class AddController {
         try {
             const formdata = calculateTB(req.body);
             const studentId = req.body.MSSV;
-            const existingStudent = await Student.findOne({ MSSV: studentId });
-            if (existingStudent) {
+            const sameIdStudent = await Student.findOne({ MSSV: studentId });
+            if (sameIdStudent) {
                 return res
                     .status(400)
-                    .json({ message: 'ID sinh viên đã tồn tại.' });
+                    .json({
+                        message: 'ID sinh viên đã tồn tại.',
+                        target: 'MSSV',
+                    });
             }
             if (!formdata) {
                 return res.status(500).json({ message: 'Đã có lỗi xảy ra.' });
@@ -58,4 +61,8 @@ class AddController {
     }
 }
 
-module.exports = new AddController();
+module.exports = {
+    AddController: new AddController(),
+    updateClassroom: updateClassroom,
+    calculateTB: calculateTB,
+};

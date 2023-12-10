@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
 import TableClice from './TableSlice';
 import { getOptionCurrent } from '../../../redux/selectors';
-function Option({ ClassName }) {
+function Option() {
     const dispatch = useDispatch();
     const setIcon = TableClice.actions.appearIcon;
     const setOption = TableClice.actions.setOptionCurrent;
@@ -15,10 +15,12 @@ function Option({ ClassName }) {
         dispatch(setOption(e.target.value));
         const listIcon = {
             delete: {
+                name: 'delete',
                 class: 'fa-solid fa-trash',
                 style: { color: 'red' },
             },
             edit: {
+                name: 'edit',
                 class: 'fa-solid fa-pen-to-square',
                 style: { color: 'blue' },
             },
@@ -30,9 +32,6 @@ function Option({ ClassName }) {
         )[1];
         dispatch(setIcon(icon));
     };
-    useEffect(() => {
-        console.log(optionCurrent);
-    });
     return (
         <Form.Select
             className={styles.select_option}

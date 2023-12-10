@@ -6,16 +6,18 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import clsx from 'clsx';
 import { useNavigate } from 'react-router-dom';
+import LogSlice from '../../../../log/LogSlice';
 
 function FormInput({
     add,
     edit,
     student,
-    info,
+    error,
     log,
+    logForm,
     style,
     status,
-    id,
+    idTimeOut,
     nameButton,
     button,
     method,
@@ -31,39 +33,50 @@ function FormInput({
         CK: '',
         Class: '',
     };
-    const [formStudent, setFormStudent] = useState(form);
-    const target = useRef();
-    const nav = useNavigate();
-    const classFormGroup = clsx('mb-3', [styles.form_group]);
-    const dipatch = useDispatch();
-    const reset = FormSlice.actions.resetinitialState;
-    const check = FormSlice.actions.checkData;
-    const enter = FormSlice.actions.enterStudent;
-    const clear = FormSlice.actions.clearStudent;
-    const set = FormSlice.actions.setInfo;
-    const addinfoError = FormSlice.actions.addInfoError;
-    const deleteInfoError = FormSlice.actions.deleteInfoError;
     const setTime = () => {
         if (log === '') {
             const id = setTimeout(() => {
-                dipatch(set());
+                dispatch(set());
+                dispatch(setLogNull());
+                dispatch(setFormLogNull());
             }, 4000);
             setIdTimeOut(id);
         }
     };
+    const [formStudent, setFormStudent] = useState(form);
+    const target = useRef();
+    const nav = useNavigate();
+    const dispatch = useDispatch();
+    const classFormGroup = clsx('mb-3', [styles.form_group]);
+    const reset = FormSlice.actions.resetinitialState;
+    const check = FormSlice.actions.checkData;
+    const enter = FormSlice.actions.enterStudent;
+    const clear = FormSlice.actions.clearStudent;
+    const set = LogSlice.actions.setInfo;
+    const setLogNull = LogSlice.actions.setLogNull;
+    const setIdTime = LogSlice.actions.setIdTime;
+    const setLog = LogSlice.actions.setLog;
+    const setFormLogNull = FormSlice.actions.setLogNull;
+    const setAddorEdit = FormSlice.actions.setAddorEdit;
+    const addinfoError = FormSlice.actions.addInfoError;
+    const deleteInfoError = FormSlice.actions.deleteInfoError;
+    //handle data when user change input
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormStudent({ ...formStudent, [name]: value });
-        dipatch(check({ name: name, value: value }));
-        dipatch(deleteInfoError({ name: name }));
+        dispatch(check({ name: name, value: value }));
+        dispatch(deleteInfoError({ name: name }));
     };
+    //submit data form into database
     const handleSubmit = (e) => {
         setTime();
         e.preventDefault();
-        dipatch(addinfoError());
+        dispatch(addinfoError());
         if (Object.values(status).includes(false)) return;
-        dipatch(method(formStudent));
+        dispatch(method(formStudent));
+        dispatch(setIdTime(idTimeOut));
     };
+    //add .0 after user click entry '.'
     const handleKeydown = (e) => {
         if (e.keyCode === 190) {
             const { name, value } = e.target;
@@ -71,29 +84,40 @@ function FormInput({
                 setFormStudent({ ...formStudent, [name]: value + '.0' });
         }
     };
+    //clear data form
     const handleClear = () => {
         setTime();
-        dipatch(clear({ form, id }));
+        dispatch(clear(form));
         setFormStudent(student);
+        dispatch(setIdTime(idTimeOut));
         target.current.focus();
     };
+    //update data form
     useEffect(() => {
-        dipatch(enter(formStudent));
-    }, [formStudent, dipatch, enter]);
+        dispatch(enter(formStudent));
+    }, [formStudent, dispatch, enter]);
+    //reset data form
     useEffect(() => {
-        dipatch(reset());
+        dispatch(reset());
         target.current.focus();
-    }, [dipatch, reset]);
+    }, [dispatch, reset]);
+    //edit student
     useEffect(() => {
         setFormStudent(student);
     }, [student]);
+    //clear after add or edit complete
     useEffect(() => {
         if (edit || add) {
+            dispatch(setLog(logForm));
             setFormStudent(form);
             target.current.focus();
+            dispatch(setAddorEdit());
         }
         if (edit) setTimeout(() => nav('/student'), 1500);
     }, [add, edit]);
+    useEffect(() => {
+        dispatch(setLog(logForm));
+    }, [logForm]);
     return (
         <Form action="/student" className={styles.form}>
             <Form.Group className={classFormGroup}>
@@ -107,7 +131,7 @@ function FormInput({
                     ref={target}
                     style={style.MSSV}
                 />
-                <small style={{ color: 'red' }}>{info.MSSV}</small>
+                <small style={{ color: 'red' }}>{error.MSSV}</small>
             </Form.Group>
             <Form.Group className={classFormGroup}>
                 <Form.Label>Họ và tên sinh viên</Form.Label>
@@ -119,7 +143,7 @@ function FormInput({
                     maxLength={255}
                     style={style.Name}
                 />
-                <small style={{ color: 'red' }}>{info.Name}</small>
+                <small style={{ color: 'red' }}>{error.Name}</small>
             </Form.Group>
             <Form.Group className={classFormGroup}>
                 <Form.Label>Ngày sinh</Form.Label>
@@ -130,7 +154,7 @@ function FormInput({
                     onChange={handleInputChange}
                     style={style.Birth}
                 />
-                <small style={{ color: 'red' }}>{info.Birth}</small>
+                <small style={{ color: 'red' }}>{error.Birth}</small>
             </Form.Group>
             <Form.Group className={classFormGroup}>
                 <Form.Label>Khoa</Form.Label>
@@ -142,7 +166,7 @@ function FormInput({
                     maxLength={255}
                     style={style.Faculty}
                 />
-                <small style={{ color: 'red' }}>{info.Faculty}</small>
+                <small style={{ color: 'red' }}>{error.Faculty}</small>
             </Form.Group>
             <Form.Group className={classFormGroup}>
                 <Form.Label>Điểm quá trình</Form.Label>
@@ -155,7 +179,7 @@ function FormInput({
                     onKeyDown={handleKeydown}
                     style={style.QT}
                 />
-                <small style={{ color: 'red' }}>{info.QT}</small>
+                <small style={{ color: 'red' }}>{error.QT}</small>
             </Form.Group>
             <Form.Group className={classFormGroup}>
                 <Form.Label>Điểm giữa kì</Form.Label>
@@ -168,7 +192,7 @@ function FormInput({
                     onKeyDown={handleKeydown}
                     style={style.GK}
                 />
-                <small style={{ color: 'red' }}>{info.GK}</small>
+                <small style={{ color: 'red' }}>{error.GK}</small>
             </Form.Group>
             <Form.Group className={classFormGroup}>
                 <Form.Label>Điểm cuối kì</Form.Label>
@@ -181,7 +205,7 @@ function FormInput({
                     onKeyDown={handleKeydown}
                     style={style.CK}
                 />
-                <small style={{ color: 'red' }}>{info.CK}</small>
+                <small style={{ color: 'red' }}>{error.CK}</small>
             </Form.Group>
             <Form.Group className={classFormGroup}>
                 <Form.Label>Mã lớp</Form.Label>
@@ -193,7 +217,7 @@ function FormInput({
                     maxLength={255}
                     style={style.Class}
                 />
-                <small style={{ color: 'red' }}>{info.Class}</small>
+                <small style={{ color: 'red' }}>{error.Class}</small>
             </Form.Group>
             <div className={styles.costumebutton}>
                 <Button

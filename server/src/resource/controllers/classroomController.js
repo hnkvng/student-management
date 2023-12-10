@@ -4,7 +4,7 @@ const Classroom = require('../models/classroom');
 
 class classControllers {
     //GET /class
-    show(rep, res, next) {
+    show(req, res, next) {
         Classroom.find()
             .then((classes) => {
                 res.json({ classes });

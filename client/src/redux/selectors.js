@@ -1,23 +1,27 @@
+//Log
+const getLog = (state) => state.log.log;
+
+export { getLog };
 //PageAdd
 const formStudent = (state) => state.form.student;
-const infoInputStudent = (state) => state.form.info;
+const errorInputStudent = (state) => state.form.error;
+const getLogForm = (state) => state.form.log;
 const styleInputStudent = (state) => state.form.style;
 const statusInputStudent = (state) => state.form.status;
-const infoLog = (state) => state.form.log;
 const statusButton = (state) => state.form.button;
 const getNameButton = (state) => state.form.nameButton;
 const getStatusAdd = (state) => state.form.add;
 const getStatusEdit = (state) => state.form.edit;
 export {
     formStudent,
-    infoInputStudent,
+    errorInputStudent,
     statusButton,
     styleInputStudent,
     statusInputStudent,
-    infoLog,
     getNameButton,
     getStatusAdd,
     getStatusEdit,
+    getLogForm,
 };
 
 //PageStudent
@@ -28,7 +32,10 @@ const getCurrentNameClasses = (state) => state.table.class.classesName;
 const getOptionCurrent = (state) => state.table.optionsCurrent;
 const getIconCurrent = (state) => state.table.iconCurrent;
 const getStudentEdit = (state) => state.table.studentEdit;
-
+const getShowDeleteStudent = (state) => state.table.showDeleteStudent;
+const getShowDeleteClass = (state) => state.table.showDeleteClass;
+const getDelete = (state) => state.table.delete;
+const getLogTable = (state) => state.table.log;
 export {
     getInfoStudent,
     getInfoClasses,
@@ -37,4 +44,8 @@ export {
     getOptionCurrent,
     getIconCurrent,
     getStudentEdit,
+    getShowDeleteStudent,
+    getShowDeleteClass,
+    getDelete,
+    getLogTable,
 };

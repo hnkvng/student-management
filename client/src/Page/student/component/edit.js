@@ -10,9 +10,9 @@ import FormSlice from '../../add/component/Form/FormSlice';
 function Edit() {
     const dispatch = useDispatch();
     const { id } = useParams();
+    const studentEdit = useSelector(getStudentEdit);
     const form = FormSlice.actions.enterStudent;
     const setSatus = FormSlice.actions.setSatus;
-    const studentEdit = useSelector(getStudentEdit);
     const setNameButton = FormSlice.actions.setNameButton;
     useEffect(() => {
         dispatch(getApiStudentEdit(id));

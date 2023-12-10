@@ -5,8 +5,8 @@ const Classroom = require('../models/classroom');
 
 class studentControllers {
     //GET /student
-    show(rep, res, next) {
-        const id = rep.query._id.toString();
+    show(req, res, next) {
+        const id = req.query._id.toString();
         if (id === '' || id === undefined || id === null)
             return res.json({ Student: [], Classes: null });
         Promise.all([Classroom.findOne({ _id: id }), Student.find()])

@@ -2,11 +2,12 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {
     getStudent,
     getClass,
-    setStudentEdit,
     getStudentEdit,
+    removeStudent,
+    removeClass,
 } from '../../../API/api';
 import { fetchApiData } from '../../../Helpers/apiHelpers';
-
+import props from '../../../log/props';
 const initState = {
     student: [],
     classes: [],
@@ -17,6 +18,10 @@ const initState = {
     iconCurrent: {},
     optionsCurrent: '',
     studentEdit: {},
+    showDeleteStudent: false,
+    showDeleteClass: false,
+    delete: false,
+    log: '',
 };
 const TableSlice = createSlice({
     name: 'TableSlice',
@@ -39,6 +44,15 @@ const TableSlice = createSlice({
         appearIcon: (state, action) => {
             state.iconCurrent = action.payload;
         },
+        setShowDeleteStudent: (state, action) => {
+            state.showDeleteStudent = action.payload;
+        },
+        setShowDeleteClass: (state, action) => {
+            state.showDeleteClass = action.payload;
+        },
+        setLogNull: (state) => {
+            state.log = '';
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -54,6 +68,7 @@ const TableSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             })
+            //
             .addCase(getApiClasses.pending, (state) => {
                 state.loading = true;
             })
@@ -65,6 +80,7 @@ const TableSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             })
+            //
             .addCase(getApiStudentEdit.pending, (state) => {
                 state.loading = true;
             })
@@ -75,6 +91,35 @@ const TableSlice = createSlice({
             .addCase(getApiStudentEdit.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            })
+            //
+            .addCase(deleteStudent.pending, (state) => {
+                state.loading = true;
+                state.delete = false;
+            })
+            .addCase(deleteStudent.fulfilled, (state, action) => {
+                state.loading = false;
+                state.delete = true;
+                state.log = { ...props.delete, des: action.payload.message };
+            })
+            .addCase(deleteStudent.rejected, (state, action) => {
+                state.loading = false;
+                state.delete = false;
+                state.log = { ...props.delete, des: action.payload.message };
+            })
+            .addCase(deleteClass.pending, (state) => {
+                state.loading = true;
+                state.delete = false;
+            })
+            .addCase(deleteClass.fulfilled, (state, action) => {
+                state.loading = false;
+                state.delete = true;
+                state.log = { ...props.delete, des: action.payload.message };
+            })
+            .addCase(deleteClass.rejected, (state, action) => {
+                state.loading = false;
+                state.delete = false;
+                state.log = { ...props.delete, des: action.payload.message };
             });
     },
 });
@@ -91,4 +136,12 @@ export const getApiClasses = createAsyncThunk(
 export const getApiStudentEdit = createAsyncThunk(
     'TableSlice/getApiStudentEdit',
     async (data, Thunk) => fetchApiData(getStudentEdit, data, Thunk),
+);
+export const deleteStudent = createAsyncThunk(
+    'TableSlice/deleteStudent',
+    async (data, Thunk) => fetchApiData(removeStudent, data, Thunk),
+);
+export const deleteClass = createAsyncThunk(
+    'TableSlice/deleteClass',
+    async (data, Thunk) => fetchApiData(removeClass, data, Thunk),
 );

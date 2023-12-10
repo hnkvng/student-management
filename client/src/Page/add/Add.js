@@ -4,50 +4,40 @@ import styles from './component/Form/main.module.css';
 import { useSelector } from 'react-redux';
 import {
     formStudent,
-    infoInputStudent,
+    errorInputStudent,
     styleInputStudent,
     statusInputStudent,
-    infoLog,
     statusButton,
     getNameButton,
     getStatusAdd,
     getStatusEdit,
+    getLog,
+    getLogForm,
 } from '../../redux/selectors';
-import Log from '../../log/log';
+import ShowLog from './showLog';
 
 function FormAdd({ method }) {
     const [idTimeOut, setIdTimeOut] = useState(null);
-    const student = useSelector(formStudent);
-    const info = useSelector(infoInputStudent);
-    const style = useSelector(styleInputStudent);
-    const status = useSelector(statusInputStudent);
-    const statusBut = useSelector(statusButton);
-    const log = useSelector(infoLog);
-    const nameButton = useSelector(getNameButton);
-    const edit = useSelector(getStatusEdit);
-    const add = useSelector(getStatusAdd);
+    const props = {
+        student: useSelector(formStudent),
+        error: useSelector(errorInputStudent),
+        style: useSelector(styleInputStudent),
+        status: useSelector(statusInputStudent),
+        button: useSelector(statusButton),
+        log: useSelector(getLog),
+        logForm: useSelector(getLogForm),
+        nameButton: useSelector(getNameButton),
+        edit: useSelector(getStatusEdit),
+        add: useSelector(getStatusAdd),
+        idTimeOut: idTimeOut,
+        method: method,
+        setIdTimeOut: setIdTimeOut,
+    };
     return (
         <>
-            {log !== '' ? (
-                <div id={styles.toast}>
-                    <Log {...log}></Log>
-                </div>
-            ) : null}
+            <ShowLog log={props.log}></ShowLog>
             <div className={styles.container}>
-                <FormInput
-                    nameButton={nameButton}
-                    student={student}
-                    info={info}
-                    log={log}
-                    style={style}
-                    status={status}
-                    button={statusBut}
-                    id={idTimeOut}
-                    method={method}
-                    edit={edit}
-                    add={add}
-                    setIdTimeOut={setIdTimeOut}
-                />
+                <FormInput {...props} />
             </div>
         </>
     );

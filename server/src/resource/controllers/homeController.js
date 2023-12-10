@@ -1,6 +1,6 @@
 class homeControllers {
     //GET /home
-    show(rep, res) {
+    show(req, res) {
         res.render('home');
     }
 }

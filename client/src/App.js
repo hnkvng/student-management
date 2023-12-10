@@ -16,11 +16,11 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/student" element={<Student />}></Route>
-                    <Route path="/student/:id/edit" element={<Edit />}></Route>
                     <Route
                         path="/student/add"
                         element={<Add method={addStudent} />}
                     ></Route>
+                    <Route path="/student/:id/edit" element={<Edit />}></Route>
                 </Routes>
             </div>
             <Footer></Footer>

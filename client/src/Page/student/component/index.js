@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './main.module.css';
 import Body from './body';
 import Class from './classes';
@@ -7,42 +7,33 @@ import {
     getCurrentNameClasses,
     getIconCurrent,
 } from '../../../redux/selectors';
-import Option from './options';
 import CheckBox from './checkbox';
-import Button from 'react-bootstrap/Button';
+import ShowOption from './showOption';
+import ShowIcon from './showIcon';
+import { getLog } from '../../../redux/selectors';
+import ShowLog from '../../add/showLog';
 function Table() {
     const ClassName = useSelector(getCurrentNameClasses);
     const icon = useSelector(getIconCurrent);
+    const log = useSelector(getLog);
     return (
         <div className={styles.wrapper}>
+            <ShowLog log={log}></ShowLog>
             <div className={styles.grid}>
                 <div className={styles.title}>
                     <Class></Class>
                 </div>
                 <h3>
-                    {ClassName} /
-                    {icon.class !== undefined ? (
-                        <i
-                            className={icon.class}
-                            id={styles.icon}
-                            style={icon.style}
-                        ></i>
-                    ) : null}
+                    {ClassName}
+                    <ShowIcon
+                        icon={icon}
+                        target="Lớp học"
+                        ClassName={ClassName}
+                    ></ShowIcon>
                 </h3>
             </div>
             <div className={styles.selection}>
-                {ClassName !== null ? (
-                    <Option ClassName={ClassName}></Option>
-                ) : null}
-                {/* <Button
-                    variant="primary"
-                    className={styles.customs_button}
-                    type="button"
-                    // disabled={button.submit}
-                    // onClick={handleSubmit}
-                >
-                    Thực hiện
-                </Button>   */}
+                <ShowOption ClassName={ClassName}></ShowOption>
             </div>
             <div className={styles.table_responsive}>
                 <table className="table table-hover table-condensed table-condensed">
@@ -50,10 +41,7 @@ function Table() {
                         <tr>
                             <th scope="col">
                                 {icon.class === 'fa-solid fa-trash' ? (
-                                    <CheckBox all={'all'}></CheckBox>
-                                ) : null}
-                                {icon.class !== undefined ? (
-                                    <i id={styles.icon}></i>
+                                    <CheckBox all="All"></CheckBox>
                                 ) : null}
                                 STT
                             </th>

@@ -1,19 +1,7 @@
 const Student = require('../models/student');
 const Classroom = require('../models/classroom');
+const Controllers = require('../controllers/addController');
 
-const updateClassroom = async (modelName, student) => {
-    const target = await Classroom.find({ Name: modelName });
-    if (target.length === 0) {
-        const classroom = new Classroom({
-            Name: modelName,
-            Students: [student._id],
-        });
-        await classroom.save();
-    } else {
-        target[0].Students.push(student._id);
-        await Classroom.updateOne({ _id: target[0]._id }, target[0]);
-    }
-};
 const updateStudentInclass = async (studentId) => {
     const target = await Classroom.find();
     const Class = target.filter((e) => e.Students.includes(studentId));
@@ -23,8 +11,8 @@ const updateStudentInclass = async (studentId) => {
 // Điều khiển
 class editControllers {
     //[PUT] => http://localhost:3000/student/:studentId/edit
-    show(rep, res, next) {
-        const studentId = rep.query._id;
+    show(req, res, next) {
+        const studentId = req.query._id;
         Student.findOne({ _id: studentId })
             .then((student) => {
                 res.json({ student });
@@ -34,16 +22,32 @@ class editControllers {
                 next(error);
             });
     }
-    async edit(rep, res, next) {
-        const studentEdit = rep.body;
+    async edit(req, res, next) {
+        const studentEdit = req.body;
         try {
-            const existingStudent = await Student.findOne({
+            const sameIdStudent = await Student.findOne({
+                MSSV: studentEdit.MSSV,
+            });
+            if (sameIdStudent !== null)
+                if (sameIdStudent._id != studentEdit._id) {
+                    return res
+                        .status(400)
+                        .json({
+                            message: 'ID sinh viên đã tồn tại.',
+                            target: 'MSSV',
+                        });
+                }
+            const newStudent = await Student.findOne({
                 _id: studentEdit._id,
             });
-            if (existingStudent) {
-                await Student.updateOne({ _id: studentEdit._id }, studentEdit);
+            if (newStudent) {
+                const formdata = Controllers.calculateTB(req.body);
+                await Student.updateOne({ _id: studentEdit._id }, formdata);
                 await updateStudentInclass(studentEdit._id);
-                await updateClassroom(studentEdit.Class, existingStudent);
+                await Controllers.updateClassroom(
+                    studentEdit.Class,
+                    newStudent,
+                );
                 res.status(200).json({
                     message: 'Cập nhật sinh viên thành công!',
                 });

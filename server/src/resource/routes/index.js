@@ -10,7 +10,7 @@ function route(app) {
     app.use('/api/add', add);
     app.use('/api/classroom', classroom);
     app.use('/api/student/edit', edit);
-    app.use('/api/delete', deletes);
+    app.use('/api/student/delete', deletes);
 }
 
 module.exports = route;
