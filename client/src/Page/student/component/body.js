@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import TableSlice, { getApiStudent } from './TableSlice';
+import TableSlice, { getApiStudent, getApiClasses } from './TableSlice';
 import {
     getInfoStudent,
     getCurrentIdClasses,
@@ -15,23 +15,17 @@ import LogSlice from '../../../log/LogSlice';
 
 function Body() {
     const setTime = () => {
-        if (log === '') {
-            const id = setTimeout(() => {
-                dispatch(set());
-                dispatch(setLogNull());
-                dispatch(setTableLogNull());
-            }, 4000);
-            setIdTimeOut(id);
-        }
+        const id = setTimeout(() => {
+            dispatch(desploy());
+        }, 4000);
+        setIdTimeOut(id);
     };
     const dispatch = useDispatch();
     const [idTimeOut, setIdTimeOut] = useState(null);
-    const set = LogSlice.actions.setInfo;
     const setLog = LogSlice.actions.setLog;
-    const setLogNull = LogSlice.actions.setLogNull;
-    const setIdTime = LogSlice.actions.setIdTime;
-    const setTableLogNull = TableSlice.actions.setLogNull;
-    const log = useSelector(getLog);
+    const desploy = LogSlice.actions.desploy;
+    const clear = LogSlice.actions.clearAll;
+    const setLogNull = TableSlice.actions.setLogNull;
     const logTable = useSelector(getLogTable);
     const dataStudent = useSelector(getInfoStudent);
     const id = useSelector(getCurrentIdClasses);
@@ -41,11 +35,14 @@ function Body() {
         dispatch(getApiStudent(id));
     }, [dispatch, id]);
     useEffect(() => {
+        dispatch(clear());
+    }, []);
+    useEffect(() => {
         if (actionDelete) {
-            setTime();
+            dispatch(getApiClasses());
+            dispatch(setLog({ target: logTable, timeId: idTimeOut }));
             dispatch(getApiStudent(id));
-            dispatch(setLog(logTable));
-            dispatch(setIdTime(idTimeOut));
+            dispatch(setLogNull());
         }
     }, [actionDelete]);
     return dataStudent.map((data, index) => (

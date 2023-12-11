@@ -1,36 +1,31 @@
 const Student = require('../models/student');
 const Classroom = require('../models/classroom');
 
+const updateStudentInclass = async (studentId, ClassId) => {
+    const target = await Classroom.findOne({ _id: ClassId });
+    target.Students = target.Students.filter((e) => e != studentId);
+    await Classroom.updateOne({ _id: ClassId }, target);
+};
 // Điều khiển
 class deleteControllers {
     //[DELETE] => http://localhost:4000/student/delete
-    delete(req, res, next) {
+    async delete(req, res, next) {
         const modelClassIdToCheck = req.body.classroomId;
         const modelIdToCheck = req.body.studentId;
-        Promise.all([
-            Classroom.find({ _id: modelClassIdToCheck }),
-            Student.deleteOne({ _id: modelIdToCheck }),
-        ])
-            .then(([targetClass, studentid]) => {
-                targetClass[0].Students.pop(req.body.studentId);
-                Classroom.updateOne(
-                    { _id: modelClassIdToCheck },
-                    targetClass[0],
-                )
-                    .then(() =>
-                        res
-                            .status(200)
-                            .json({ message: 'Xóa sinh viên thành công!' }),
-                    )
-                    .catch(() =>
-                        res
-                            .status(500)
-                            .json({
-                                message: 'Xóa sinh viên không thành công!',
-                            }),
-                    );
-            })
-            .catch(() => res.status(500).json({ message: 'có lỗi xảy ra!' }));
+        try {
+            await updateStudentInclass(modelIdToCheck, modelClassIdToCheck);
+            const completeDelete = await Student.deleteOne({
+                _id: modelIdToCheck,
+            });
+            if (completeDelete) {
+                res.status(200).json({ message: 'Xóa sinh viên thành công!' });
+            }
+        } catch (error) {
+            res.status(500).json({
+                message: 'Xóa sinh viên không thành công!',
+            }),
+                next(error);
+        }
     }
     //[DELETE] => http://localhost:3000/student/deleteAll
     deleteAll(req, res, next) {
@@ -45,10 +40,15 @@ class deleteControllers {
             const classRoom = await Classroom.findOne({
                 _id: modelClassIdToCheck,
             });
-            const student = await Student.find();
-            const x = classRoom.Students.filter((e) => student.includes(e));
-            console.log(x);
+            await Student.deleteMany({ Class: classRoom.Name });
+            const complete = await Classroom.deleteOne({ _id: classRoom._id });
+            if (complete) {
+                res.status(200).json({ message: 'Xóa lớp thành công!' });
+            }
         } catch (error) {
+            res.status(500).json({
+                message: 'Xóa lớp không thành công!',
+            });
             next(error);
         }
     }

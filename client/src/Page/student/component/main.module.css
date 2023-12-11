@@ -3,6 +3,12 @@
     min-width: 100vw;
     min-height: 100vh;
 }
+.container_log
+{
+    position:fixed;
+    top: 32px;
+    right: 32px;
+}
 .table_responsive
 {
     min-height: 500px;

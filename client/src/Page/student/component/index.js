@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styles from './main.module.css';
 import Body from './body';
 import Class from './classes';
@@ -10,15 +10,20 @@ import {
 import CheckBox from './checkbox';
 import ShowOption from './showOption';
 import ShowIcon from './showIcon';
-import { getLog } from '../../../redux/selectors';
-import ShowLog from '../../add/showLog';
+import { getLog, getTargetDelete } from '../../../redux/selectors';
+import ShowLog from '../../../log/showLog';
+import Card from './showCardDelete';
 function Table() {
     const ClassName = useSelector(getCurrentNameClasses);
     const icon = useSelector(getIconCurrent);
     const log = useSelector(getLog);
+    const targetDelete = useSelector(getTargetDelete);
     return (
         <div className={styles.wrapper}>
-            <ShowLog log={log}></ShowLog>
+            <div className={styles.container_log}>
+                {log.length > 0 && <ShowLog log={log}></ShowLog>}
+                <Card {...targetDelete}></Card>
+            </div>
             <div className={styles.grid}>
                 <div className={styles.title}>
                     <Class></Class>
@@ -43,6 +48,7 @@ function Table() {
                                 {icon.class === 'fa-solid fa-trash' ? (
                                     <CheckBox all="All"></CheckBox>
                                 ) : null}
+                                <span className={styles.checkbox_all}></span>
                                 STT
                             </th>
                             <th scope="col">MSSV</th>

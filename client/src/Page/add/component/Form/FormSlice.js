@@ -156,7 +156,7 @@ const FormSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(addStudent.pending, (state, action) => {
+            .addCase(addStudent.pending, (state) => {
                 state.loading = true;
                 state.button.submit = false;
             })
@@ -170,6 +170,7 @@ const FormSlice = createSlice({
                 const target = action.payload.target;
                 state.loading = false;
                 state.add = false;
+                state.button.submit = true;
                 state.log = { ...props.error, des: action.payload.message };
                 if (target === 'MSSV') {
                     state.status[target] = false;

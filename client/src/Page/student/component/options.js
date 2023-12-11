@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './main.module.css';
 import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';

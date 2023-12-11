@@ -32,10 +32,10 @@ const getCurrentNameClasses = (state) => state.table.class.classesName;
 const getOptionCurrent = (state) => state.table.optionsCurrent;
 const getIconCurrent = (state) => state.table.iconCurrent;
 const getStudentEdit = (state) => state.table.studentEdit;
-const getShowDeleteStudent = (state) => state.table.showDeleteStudent;
-const getShowDeleteClass = (state) => state.table.showDeleteClass;
+const getTargetDelete = (state) => state.table.targetDelete;
 const getDelete = (state) => state.table.delete;
 const getLogTable = (state) => state.table.log;
+
 export {
     getInfoStudent,
     getInfoClasses,
@@ -44,8 +44,7 @@ export {
     getOptionCurrent,
     getIconCurrent,
     getStudentEdit,
-    getShowDeleteStudent,
-    getShowDeleteClass,
     getDelete,
     getLogTable,
+    getTargetDelete,
 };

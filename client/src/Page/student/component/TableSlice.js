@@ -18,9 +18,15 @@ const initState = {
     iconCurrent: {},
     optionsCurrent: '',
     studentEdit: {},
-    showDeleteStudent: false,
-    showDeleteClass: false,
     delete: false,
+    targetDelete: {
+        name: '',
+        show: false,
+        des: '',
+        method: '',
+        idStudent: '',
+        idClass: '',
+    },
     log: '',
 };
 const TableSlice = createSlice({
@@ -44,11 +50,8 @@ const TableSlice = createSlice({
         appearIcon: (state, action) => {
             state.iconCurrent = action.payload;
         },
-        setShowDeleteStudent: (state, action) => {
-            state.showDeleteStudent = action.payload;
-        },
-        setShowDeleteClass: (state, action) => {
-            state.showDeleteClass = action.payload;
+        setTargetDelete: (state, action) => {
+            state.targetDelete = action.payload;
         },
         setLogNull: (state) => {
             state.log = '';
@@ -114,6 +117,12 @@ const TableSlice = createSlice({
             .addCase(deleteClass.fulfilled, (state, action) => {
                 state.loading = false;
                 state.delete = true;
+                state.class = {
+                    classesId: '',
+                    classesName: '',
+                };
+                state.iconCurrent = {};
+                state.optionsCurrent = '';
                 state.log = { ...props.delete, des: action.payload.message };
             })
             .addCase(deleteClass.rejected, (state, action) => {

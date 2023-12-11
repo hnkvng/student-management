@@ -13,7 +13,6 @@ function FormInput({
     edit,
     student,
     error,
-    log,
     logForm,
     style,
     status,
@@ -34,14 +33,10 @@ function FormInput({
         Class: '',
     };
     const setTime = () => {
-        if (log === '') {
-            const id = setTimeout(() => {
-                dispatch(set());
-                dispatch(setLogNull());
-                dispatch(setFormLogNull());
-            }, 4000);
-            setIdTimeOut(id);
-        }
+        const id = setTimeout(() => {
+            dispatch(desploy());
+        }, 4000);
+        setIdTimeOut(id);
     };
     const [formStudent, setFormStudent] = useState(form);
     const target = useRef();
@@ -52,9 +47,8 @@ function FormInput({
     const check = FormSlice.actions.checkData;
     const enter = FormSlice.actions.enterStudent;
     const clear = FormSlice.actions.clearStudent;
-    const set = LogSlice.actions.setInfo;
-    const setLogNull = LogSlice.actions.setLogNull;
-    const setIdTime = LogSlice.actions.setIdTime;
+    const clearLog = LogSlice.actions.clearAll;
+    const desploy = LogSlice.actions.desploy;
     const setLog = LogSlice.actions.setLog;
     const setFormLogNull = FormSlice.actions.setLogNull;
     const setAddorEdit = FormSlice.actions.setAddorEdit;
@@ -69,12 +63,11 @@ function FormInput({
     };
     //submit data form into database
     const handleSubmit = (e) => {
-        setTime();
         e.preventDefault();
         dispatch(addinfoError());
         if (Object.values(status).includes(false)) return;
+        setTime();
         dispatch(method(formStudent));
-        dispatch(setIdTime(idTimeOut));
     };
     //add .0 after user click entry '.'
     const handleKeydown = (e) => {
@@ -89,18 +82,12 @@ function FormInput({
         setTime();
         dispatch(clear(form));
         setFormStudent(student);
-        dispatch(setIdTime(idTimeOut));
         target.current.focus();
     };
     //update data form
     useEffect(() => {
         dispatch(enter(formStudent));
-    }, [formStudent, dispatch, enter]);
-    //reset data form
-    useEffect(() => {
-        dispatch(reset());
-        target.current.focus();
-    }, [dispatch, reset]);
+    }, [formStudent]);
     //edit student
     useEffect(() => {
         setFormStudent(student);
@@ -115,9 +102,19 @@ function FormInput({
         }
         if (edit) setTimeout(() => nav('/student'), 1500);
     }, [add, edit]);
+    //
     useEffect(() => {
-        dispatch(setLog(logForm));
+        if (logForm !== '') {
+            dispatch(setLog({ target: logForm, timeId: idTimeOut }));
+            dispatch(setFormLogNull());
+        }
     }, [logForm]);
+    //reset data form
+    useEffect(() => {
+        dispatch(reset());
+        dispatch(clearLog());
+        target.current.focus();
+    }, []);
     return (
         <Form action="/student" className={styles.form}>
             <Form.Group className={classFormGroup}>

@@ -6,11 +6,9 @@ import LogSlice from './LogSlice';
 function Log({ info, des, icon, theme }) {
     const containerClass = clsx(styles.toast, theme);
     const dipatch = useDispatch();
-    const set = LogSlice.actions.setInfo;
-    const setLogNull = LogSlice.actions.setLogNull;
+    const disploy = LogSlice.actions.desployback;
     const handleClose = () => {
-        dipatch(set());
-        dipatch(setLogNull());
+        dipatch(disploy());
     };
     return (
         <div className={containerClass}>

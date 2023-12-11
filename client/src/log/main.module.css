@@ -14,8 +14,13 @@
     animation: slideInLeft ease .8s, fadeOut linear 1s 3s forwards;
     transition: all linear;
 }
-
-
+#toast
+{
+    position:fixed;
+    top: 32px;
+    right: 32px;
+    transition: all linear;
+}
 @keyframes slideInLeft {
     from {
         opacity: 0;
@@ -26,6 +31,7 @@
         transform: translateX(0);
     }
 }
+
 @keyframes fadeOut {
     to {
         opacity: 0;

@@ -1,8 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initState = {
-    log: '',
-    idTimeout: '',
+    log: [],
 };
 
 const LogSlice = createSlice({
@@ -10,16 +9,28 @@ const LogSlice = createSlice({
     initialState: initState,
     reducers: {
         setLog: (state, action) => {
-            state.log = action.payload;
+            if (action.payload.target !== undefined) {
+                state.log.push({
+                    target: action.payload.target,
+                    timeId: action.payload.timeId,
+                });
+            }
         },
-        setIdTime: (state, action) => {
-            state.idTimeout = action.payload;
+        desploy: (state) => {
+            clearTimeout(state.log[0].timeId);
+            state.log.shift();
         },
-        setInfo: (state) => {
-            if (state.idTimeout !== '') clearTimeout(state.idTimeout);
+        desployback: (state) => {
+            clearTimeout(state.log[state.log.length - 1].timeId);
+            state.log.pop();
         },
-        setLogNull: (state) => {
-            state.log = '';
+        clearAll: (state) => {
+            if (state.log.length > 0) {
+                for (let i = 0; i < state.log.length; i++) {
+                    clearTimeout(state.log[i].timeId);
+                }
+                state.log = [];
+            }
         },
     },
 });

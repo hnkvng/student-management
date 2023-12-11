@@ -14,7 +14,7 @@ import {
     getLog,
     getLogForm,
 } from '../../redux/selectors';
-import ShowLog from './showLog';
+import ShowLog from '../../log/showLog';
 
 function FormAdd({ method }) {
     const [idTimeOut, setIdTimeOut] = useState(null);
@@ -35,7 +35,7 @@ function FormAdd({ method }) {
     };
     return (
         <>
-            <ShowLog log={props.log}></ShowLog>
+            {props.log.length > 0 && <ShowLog log={props.log}></ShowLog>}
             <div className={styles.container}>
                 <FormInput {...props} />
             </div>
