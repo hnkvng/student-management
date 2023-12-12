@@ -17,12 +17,12 @@ const LogSlice = createSlice({
             }
         },
         desploy: (state) => {
-            clearTimeout(state.log[0].timeId);
-            state.log.shift();
-        },
-        desployback: (state) => {
             clearTimeout(state.log[state.log.length - 1].timeId);
             state.log.pop();
+        },
+        desployback: (state) => {
+            clearTimeout(state.log[0].timeId);
+            state.log.shift();
         },
         clearAll: (state) => {
             if (state.log.length > 0) {

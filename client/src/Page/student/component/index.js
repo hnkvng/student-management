@@ -12,7 +12,7 @@ import ShowOption from './showOption';
 import ShowIcon from './showIcon';
 import { getLog, getTargetDelete } from '../../../redux/selectors';
 import ShowLog from '../../../log/showLog';
-import Card from './showCardDelete';
+import Card from './showCard';
 function Table() {
     const ClassName = useSelector(getCurrentNameClasses);
     const icon = useSelector(getIconCurrent);
@@ -29,7 +29,7 @@ function Table() {
                     <Class></Class>
                 </div>
                 <h3>
-                    {ClassName}
+                    {ClassName}/
                     <ShowIcon
                         icon={icon}
                         target="Lớp học"
@@ -46,9 +46,13 @@ function Table() {
                         <tr>
                             <th scope="col">
                                 {icon.class === 'fa-solid fa-trash' ? (
-                                    <CheckBox all="All"></CheckBox>
+                                    <>
+                                        <CheckBox all="All"></CheckBox>
+                                        <span
+                                            className={styles.checkbox_all}
+                                        ></span>
+                                    </>
                                 ) : null}
-                                <span className={styles.checkbox_all}></span>
                                 STT
                             </th>
                             <th scope="col">MSSV</th>

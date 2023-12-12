@@ -5,6 +5,7 @@ import {
     getStudentEdit,
     removeStudent,
     removeClass,
+    updateClass,
 } from '../../../API/api';
 import { fetchApiData } from '../../../Helpers/apiHelpers';
 import props from '../../../log/props';
@@ -19,6 +20,7 @@ const initState = {
     optionsCurrent: '',
     studentEdit: {},
     delete: false,
+    editClass: false,
     targetDelete: {
         name: '',
         show: false,
@@ -27,6 +29,8 @@ const initState = {
         idStudent: '',
         idClass: '',
     },
+    nameClass: '',
+    openClass: false,
     log: '',
 };
 const TableSlice = createSlice({
@@ -55,6 +59,9 @@ const TableSlice = createSlice({
         },
         setLogNull: (state) => {
             state.log = '';
+        },
+        setOpenClass: (state, action) => {
+            state.openClass = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -128,7 +135,21 @@ const TableSlice = createSlice({
             .addCase(deleteClass.rejected, (state, action) => {
                 state.loading = false;
                 state.delete = false;
-                state.log = { ...props.delete, des: action.payload.message };
+                state.log = { ...props.error, des: action.payload.message };
+            })
+            .addCase(editClass.pending, (state) => {
+                state.loading = true;
+                state.editClass = false;
+            })
+            .addCase(editClass.fulfilled, (state, action) => {
+                state.loading = false;
+                state.editClass = true;
+                state.log = { ...props.edit, des: action.payload.message };
+            })
+            .addCase(editClass.rejected, (state, action) => {
+                state.loading = false;
+                state.editClass = false;
+                state.error = action.payload;
             });
     },
 });
@@ -153,4 +174,8 @@ export const deleteStudent = createAsyncThunk(
 export const deleteClass = createAsyncThunk(
     'TableSlice/deleteClass',
     async (data, Thunk) => fetchApiData(removeClass, data, Thunk),
+);
+export const editClass = createAsyncThunk(
+    'TableSlice/EditClasst',
+    async (data, Thunk) => fetchApiData(updateClass, data, Thunk),
 );

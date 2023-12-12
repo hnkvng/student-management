@@ -35,7 +35,8 @@ const getStudentEdit = (state) => state.table.studentEdit;
 const getTargetDelete = (state) => state.table.targetDelete;
 const getDelete = (state) => state.table.delete;
 const getLogTable = (state) => state.table.log;
-
+const getNewNameClass = (state) => state.table.newClass;
+const getOpenClass = (state) => state.table.openClass;
 export {
     getInfoStudent,
     getInfoClasses,
@@ -47,4 +48,6 @@ export {
     getDelete,
     getLogTable,
     getTargetDelete,
+    getNewNameClass,
+    getOpenClass,
 };
