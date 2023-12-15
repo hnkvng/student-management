@@ -46,12 +46,7 @@ function Table() {
                         <tr>
                             <th scope="col">
                                 {icon.class === 'fa-solid fa-trash' ? (
-                                    <>
-                                        <CheckBox all="All"></CheckBox>
-                                        <span
-                                            className={styles.checkbox_all}
-                                        ></span>
-                                    </>
+                                    <CheckBox all="All"></CheckBox>
                                 ) : null}
                                 STT
                             </th>

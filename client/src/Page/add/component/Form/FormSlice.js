@@ -146,7 +146,7 @@ const FormSlice = createSlice({
         setSatus: (state) => {
             state.status = createOject(true);
         },
-        setAddorEdit: (state, action) => {
+        setAddorEdit: (state) => {
             state.add = false;
             state.edit = false;
         },
@@ -167,12 +167,12 @@ const FormSlice = createSlice({
                 state.log = { ...props.success, des: action.payload.message };
             })
             .addCase(addStudent.rejected, (state, action) => {
-                const target = action.payload.target;
                 state.loading = false;
                 state.add = false;
                 state.button.submit = true;
                 state.log = { ...props.error, des: action.payload.message };
-                if (target === 'MSSV') {
+                const target = action.payload.target;
+                if (target) {
                     state.status[target] = false;
                     state.style[target] = { border: '1px solid red' };
                     state.error[target] = action.payload.message;
@@ -193,7 +193,7 @@ const FormSlice = createSlice({
                 state.loading = false;
                 state.edit = false;
                 state.log = { ...props.error, des: action.payload.message };
-                if (target === 'MSSV') {
+                if (target) {
                     state.status[target] = false;
                     state.style[target] = { border: '1px solid red' };
                     state.error[target] = action.payload.message;

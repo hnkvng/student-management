@@ -13,12 +13,14 @@ import ShowCheckBox from './showCheckbox';
 
 function Body() {
     const dispatch = useDispatch();
+    const listCheckBox = [];
     const clear = LogSlice.actions.clearAll;
     const setLogNull = TableSlice.actions.setLogNull;
     const dataStudent = useSelector(getInfoStudent);
     const id = useSelector(getCurrentIdClasses);
     const icon = useSelector(getIconCurrent);
     const actionDelete = useSelector(getDelete);
+
     useEffect(() => {
         dispatch(getApiStudent(id));
     }, [dispatch, id]);
@@ -35,7 +37,10 @@ function Body() {
     return dataStudent.map((data, index) => (
         <tr key={index}>
             <td>
-                <ShowCheckBox icon={icon}></ShowCheckBox>
+                <ShowCheckBox
+                    icon={icon}
+                    listCheckBox={listCheckBox}
+                ></ShowCheckBox>
                 <ShowIcon
                     icon={icon}
                     target="Sinh viên"

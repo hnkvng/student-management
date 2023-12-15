@@ -10,17 +10,23 @@ import {
 import { fetchApiData } from '../../../Helpers/apiHelpers';
 import props from '../../../log/props';
 const initState = {
+    log: '',
     student: [],
+    studentEdit: {},
+    iconCurrent: {},
     classes: [],
     class: {
         classesId: '',
         classesName: '',
     },
-    iconCurrent: {},
-    optionsCurrent: '',
-    studentEdit: {},
-    delete: false,
+    checkAll: false,
+    listCheckbox: [],
     editClass: false,
+    openClass: false,
+    newClass: {},
+    testClass: false,
+    optionsCurrent: '',
+    delete: false,
     targetDelete: {
         name: '',
         show: false,
@@ -29,9 +35,6 @@ const initState = {
         idStudent: '',
         idClass: '',
     },
-    nameClass: '',
-    openClass: false,
-    log: '',
 };
 const TableSlice = createSlice({
     name: 'TableSlice',
@@ -62,6 +65,19 @@ const TableSlice = createSlice({
         },
         setOpenClass: (state, action) => {
             state.openClass = action.payload;
+        },
+        setNewClass: (state, action) => {
+            state.newClass = action.payload;
+            state.testClass = /[^-_\w]/.test(action.payload.value);
+        },
+        setCheckAll: (state, action) => {
+            state.checkAll = action.payload;
+        },
+        setListCheckBox: (state, action) => {
+            state.listCheckbox.push(action.payload);
+        },
+        setChangeList: (state, action) => {
+            state.listCheckbox = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -144,12 +160,13 @@ const TableSlice = createSlice({
             .addCase(editClass.fulfilled, (state, action) => {
                 state.loading = false;
                 state.editClass = true;
+                state.class.classesName = action.payload.newClass;
                 state.log = { ...props.edit, des: action.payload.message };
             })
             .addCase(editClass.rejected, (state, action) => {
                 state.loading = false;
                 state.editClass = false;
-                state.error = action.payload;
+                state.log = { ...props.error, des: action.payload.message };
             });
     },
 });

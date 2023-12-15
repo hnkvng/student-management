@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch } from 'react-redux';
@@ -11,6 +11,8 @@ import {
     getLogTable,
     getNewNameClass,
     getOpenClass,
+    getTestClass,
+    getEditClass,
 } from '../../../redux/selectors';
 import LogSlice from '../../../log/LogSlice';
 import { useSelector } from 'react-redux';
@@ -25,23 +27,38 @@ function Card({
     idClass,
     method,
 }) {
+    const [idTimeOut, setIdTimeOut] = useState(null);
+    const [ClassId, setClassId] = useState('');
+    const input = useRef();
+
+    const dispatch = useDispatch();
+
+    const setLog = LogSlice.actions.setLog;
+    const desploy = LogSlice.actions.desploy;
+
+    const setTableNull = TableSlice.actions.setLogNull;
+    const setOpenClass = TableSlice.actions.setOpenClass;
+    const setTarget = TableSlice.actions.setTargetDelete;
+    const setNewClass = TableSlice.actions.setNewClass;
+
+    const logTable = useSelector(getLogTable);
+    const newNameClass = useSelector(getNewNameClass);
+    const openClass = useSelector(getOpenClass);
+    const testClass = useSelector(getTestClass);
+    const edit = useSelector(getEditClass);
+
     const setTime = () => {
         const id = setTimeout(() => {
             dispatch(desploy());
         }, 4000);
         setIdTimeOut(id);
     };
-    const [idTimeOut, setIdTimeOut] = useState(null);
-    const input = <input type="text" maxLength={255}></input>;
-    const setLog = LogSlice.actions.setLog;
-    const desploy = LogSlice.actions.desploy;
-    const setTableNull = TableSlice.actions.setLogNull;
-    const setOpenClass = TableSlice.actions.setOpenClass;
-    const logTable = useSelector(getLogTable);
-    const newNameClass = useSelector(getNewNameClass);
-    const openClass = useSelector(getOpenClass);
-    const dispatch = useDispatch();
-    const setTarget = TableSlice.actions.setTargetDelete;
+
+    const handleInputClass = (e) => {
+        const newClass = e.target.value;
+        dispatch(setNewClass({ newClass: newClass }));
+        setClassId(e.target.value);
+    };
     const handleDeleteStudent = () => {
         setTime();
         dispatch(deleteStudent({ classroomId: idClass, studentId: idStudent }));
@@ -70,12 +87,9 @@ function Card({
     };
     const handleEditClass = () => {
         setTime();
-        dispatch(
-            editClass({ classroomId: idClass, newClassroom: newNameClass }),
-        );
-        dispatch(setOpenClass(false));
+        dispatch(editClass({ classroomId: idClass, Classroom: newNameClass }));
     };
-    const handleClose = () =>
+    const handleClose = () => {
         dispatch(
             setTarget({
                 title: '',
@@ -85,7 +99,8 @@ function Card({
                 nameButton: '',
             }),
         );
-    dispatch(setOpenClass(false));
+        dispatch(setOpenClass(false));
+    };
     const hanle = (method) => {
         switch (method) {
             case 'handleDeleteClass':
@@ -109,8 +124,23 @@ function Card({
         }
     }, [logTable]);
     useEffect(() => {
-        console.log(openClass);
-    });
+        if (openClass) input.current.focus();
+    }, [openClass]);
+    useEffect(() => {
+        if (edit) {
+            dispatch(setOpenClass(false));
+            dispatch(
+                setTarget({
+                    title: '',
+                    show: false,
+                    des: '',
+                    method: '',
+                    nameButton: '',
+                }),
+            );
+            setClassId('');
+        }
+    }, [edit]);
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
@@ -118,10 +148,24 @@ function Card({
             </Modal.Header>
             <Modal.Body>
                 {des}
-                {openClass && input}
+                {openClass && (
+                    <p>
+                        <input
+                            type="text"
+                            maxLength={255}
+                            ref={input}
+                            value={ClassId}
+                            onChange={handleInputClass}
+                        ></input>
+                    </p>
+                )}
             </Modal.Body>
             <Modal.Footer>
-                <Button variant={theme} onClick={() => hanle(method)}>
+                <Button
+                    variant={theme}
+                    onClick={() => hanle(method)}
+                    disabled={testClass}
+                >
                     {nameButton}
                 </Button>
                 <Button variant="secondary" onClick={handleClose}>

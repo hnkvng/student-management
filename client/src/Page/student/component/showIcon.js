@@ -46,6 +46,7 @@ function ShowIcon({ icon, target, ClassName, id }) {
                 des: `Nhập mã lớp mới cho  ${ClassName}!`,
                 idClass: ClassId,
                 nameButton: 'chỉnh',
+                theme: 'info',
                 method: 'handleEditClass',
             }),
         );

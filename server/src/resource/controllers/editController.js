@@ -22,7 +22,7 @@ class editControllers {
                 next(error);
             });
     }
-    async edit(req, res, next) {
+    async editStudent(req, res, next) {
         const studentEdit = req.body;
         try {
             const sameIdStudent = await Student.findOne({
@@ -30,12 +30,10 @@ class editControllers {
             });
             if (sameIdStudent !== null)
                 if (sameIdStudent._id != studentEdit._id) {
-                    return res
-                        .status(400)
-                        .json({
-                            message: 'ID sinh viên đã tồn tại.',
-                            target: 'MSSV',
-                        });
+                    return res.status(400).json({
+                        message: 'ID sinh viên đã tồn tại.',
+                        target: 'MSSV',
+                    });
                 }
             const newStudent = await Student.findOne({
                 _id: studentEdit._id,
@@ -56,6 +54,35 @@ class editControllers {
             res.status(500).json({ message: 'Có lỗi xảy ra!' });
             next(error);
         }
+    }
+    async editClass(req, res, next) {
+        const idClass = req.body.classroomId;
+        const newClass = req.body.Classroom.newClass;
+        const sameClass = await Classroom.findOne({ Name: newClass });
+        if (sameClass !== null)
+            if (idClass != sameClass._id) {
+                return res.status(400).json({
+                    message: 'Mã Lớp đã tồn tại!.',
+                });
+            }
+        const studentNewClass = await Classroom.findOne({ _id: idClass });
+        Promise.all([
+            Classroom.updateOne({ _id: idClass }, { $set: { Name: newClass } }),
+            Student.updateMany(
+                { _id: studentNewClass.Students },
+                { $set: { Class: newClass } },
+            ),
+        ])
+            .then(() => {
+                res.status(200).json({
+                    message: 'Cập nhật Lớp thành công!',
+                    newClass: newClass,
+                });
+            })
+            .catch(() => {
+                res.status(500).json({ message: 'Có lỗi xảy ra!' });
+                next(error);
+            });
     }
 }
 
