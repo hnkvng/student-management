@@ -9,6 +9,7 @@ import {
 } from '../../../API/api';
 import { fetchApiData } from '../../../Helpers/apiHelpers';
 import props from '../../../log/props';
+
 const initState = {
     log: '',
     student: [],
@@ -20,7 +21,7 @@ const initState = {
         classesName: '',
     },
     checkAll: false,
-    listCheckbox: [],
+    listCheck: [],
     editClass: false,
     openClass: false,
     newClass: {},
@@ -36,6 +37,7 @@ const initState = {
         idClass: '',
     },
 };
+
 const TableSlice = createSlice({
     name: 'TableSlice',
     initialState: initState,
@@ -74,10 +76,7 @@ const TableSlice = createSlice({
             state.checkAll = action.payload;
         },
         setListCheckBox: (state, action) => {
-            state.listCheckbox.push(action.payload);
-        },
-        setChangeList: (state, action) => {
-            state.listCheckbox = action.payload;
+            state.listCheck = action.payload;
         },
     },
     extraReducers: (builder) => {

@@ -1,27 +1,46 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styles from './main.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import TableSlice from './TableSlice';
-import { getListCheckBox } from '../../../redux/selectors';
-
-function CheckBox({ all, listCheckBox }) {
+import { getCheckAll, getListCheckBox } from '../../../redux/selectors';
+import { context } from './body';
+function CheckBox({ all }) {
     const dispatch = useDispatch();
-    const setCheckAll = TableSlice.actions.setCheckAll;
+    const idStudent = useContext(context);
+    const changeListCheck = TableSlice.actions.setListCheckBox;
+    const checkAll = TableSlice.actions.setCheckAll;
+    const listCheck = useSelector(getListCheckBox);
+    const check = useSelector(getCheckAll);
     const hanleCheckAll = (e) => {
-        dispatch(setCheckAll(e.target.checked));
+        dispatch(checkAll(e.target.checked));
+        const updatedList = listCheck.map((item) => {
+            return { ...item, check: e.target.checked };
+        });
+        dispatch(changeListCheck(updatedList));
     };
     const hanleCheck = (e) => {
-        listCheckBox.forEach((ele) => {
-            if (ele.target === e.target) ele.check = e.target.checked;
-        });
+        const updatedList = listCheck.map((item) =>
+            item.target === idStudent
+                ? { ...item, check: e.target.checked }
+                : item,
+        );
+        dispatch(changeListCheck(updatedList));
+    };
+    const hanleRef = (e) => {
+        if (e)
+            listCheck.forEach((item) => {
+                if (item.target === idStudent) {
+                    e.checked = item.check;
+                }
+            });
     };
     if (all) {
         return (
             <>
                 <input
+                    checked={check}
                     type="checkbox"
                     className={styles.checkbox}
-                    name="checkAll"
                     onChange={hanleCheckAll}
                 ></input>
                 <label className={styles.checkbox_all}>{all}</label>
@@ -30,10 +49,9 @@ function CheckBox({ all, listCheckBox }) {
     }
     return (
         <input
-            ref={(e) => listCheckBox.push({ target: e, check: e.checked })}
+            ref={hanleRef}
             type="checkbox"
             className={styles.checkbox}
-            name="check"
             onChange={hanleCheck}
         ></input>
     );

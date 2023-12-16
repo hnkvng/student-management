@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { createContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import TableSlice, { getApiStudent, getApiClasses } from './TableSlice';
 import {
@@ -11,18 +11,21 @@ import ShowIcon from './showIcon';
 import LogSlice from '../../../log/LogSlice';
 import ShowCheckBox from './showCheckbox';
 
+export const context = createContext();
+
 function Body() {
     const dispatch = useDispatch();
-    const listCheckBox = [];
     const clear = LogSlice.actions.clearAll;
     const setLogNull = TableSlice.actions.setLogNull;
+    const listCheck = TableSlice.actions.setListCheckBox;
+    const checkAll = TableSlice.actions.setCheckAll;
     const dataStudent = useSelector(getInfoStudent);
     const id = useSelector(getCurrentIdClasses);
     const icon = useSelector(getIconCurrent);
     const actionDelete = useSelector(getDelete);
-
     useEffect(() => {
         dispatch(getApiStudent(id));
+        dispatch(checkAll(false));
     }, [dispatch, id]);
     useEffect(() => {
         dispatch(clear());
@@ -34,13 +37,24 @@ function Body() {
             dispatch(setLogNull());
         }
     }, [actionDelete]);
+    useEffect(() => {
+        dispatch(
+            listCheck(
+                dataStudent.map((e) => {
+                    return {
+                        target: e._id,
+                        check: false,
+                    };
+                }),
+            ),
+        );
+    }, [dataStudent]);
     return dataStudent.map((data, index) => (
         <tr key={index}>
             <td>
-                <ShowCheckBox
-                    icon={icon}
-                    listCheckBox={listCheckBox}
-                ></ShowCheckBox>
+                <context.Provider value={data._id}>
+                    <ShowCheckBox icon={icon}></ShowCheckBox>
+                </context.Provider>
                 <ShowIcon
                     icon={icon}
                     target="Sinh viên"

@@ -16,7 +16,7 @@ function ShowIcon({ icon, target, ClassName, id }) {
                 title: `Xóa ${target}`,
                 show: true,
                 des: `Bạn có muốn xóa sinh viên này không!`,
-                idStudent: id,
+                idStudent: [id],
                 idClass: ClassId,
                 nameButton: 'Xóa',
                 theme: 'danger',

@@ -13,6 +13,7 @@ function Class() {
     const dispatch = useDispatch();
     const get = TableSlice.actions.getNameClasses;
     const reset = TableSlice.actions.resetIcon;
+    const checkAll = TableSlice.actions.setCheckAll;
     const dataClasses = useSelector(getInfoClasses);
     const ClassId = useSelector(getCurrentIdClasses);
     const editClass = useSelector(getEditClass);
@@ -24,6 +25,7 @@ function Class() {
     };
     useEffect(() => {
         dispatch(getApiClasses());
+        dispatch(checkAll(false));
         if (editClass) dispatch(getApiClasses());
     }, [dispatch, editClass]);
     return (

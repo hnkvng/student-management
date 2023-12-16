@@ -39,7 +39,8 @@ const getNewNameClass = (state) => state.table.newClass;
 const getOpenClass = (state) => state.table.openClass;
 const getTestClass = (state) => state.table.testClass;
 const getEditClass = (state) => state.table.editClass;
-const getListCheckBox = (state) => state.table.listCheckBox;
+const getListCheckBox = (state) => state.table.listCheck;
+const getCheckAll = (state) => state.table.checkAll;
 export {
     getInfoStudent,
     getInfoClasses,
@@ -56,4 +57,5 @@ export {
     getTestClass,
     getEditClass,
     getListCheckBox,
+    getCheckAll,
 };
